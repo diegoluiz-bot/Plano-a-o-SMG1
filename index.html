@@ -473,6 +473,22 @@ let state={
   editingId:null
 };
 
+// ===================== LOCAL STORAGE =====================
+function saveLocal(){
+  try{localStorage.setItem('smg1_data',JSON.stringify(state.data));}catch(e){}
+}
+function loadLocal(){
+  try{
+    const raw=localStorage.getItem('smg1_data');
+    if(!raw)return false;
+    const saved=JSON.parse(raw);
+    for(const k of Object.keys(INITIAL_DATA)){
+      if(saved[k]&&saved[k].length>0)state.data[k]=saved[k];
+    }
+    return true;
+  }catch(e){return false;}
+}
+
 // ===================== GITHUB API =====================
 async function loadFromGitHub(){
   if(!state.gh.owner||!state.gh.repo||!state.gh.token)return;
@@ -482,17 +498,18 @@ async function loadFromGitHub(){
     const j=await r.json();
     state.fileSha=j.sha;
     const decoded=JSON.parse(atob(j.content.replace(/\n/g,'')));
-    // merge: use github data if non-empty, else initial
     for(const k of Object.keys(INITIAL_DATA)){
       if(decoded[k]&&decoded[k].length>0)state.data[k]=decoded[k];
     }
+    saveLocal();
     renderAll();
     showToast('Dados carregados do GitHub','success');
   }catch(e){showToast('Erro ao carregar do GitHub: '+e.message,'error');}
 }
 
 async function saveToGitHub(){
-  if(!state.gh.owner||!state.gh.repo||!state.gh.token){showToast('Configure o repositório primeiro (⚙️ Config)','error');return false;}
+  saveLocal();
+  if(!state.gh.owner||!state.gh.repo||!state.gh.token)return false;
   try{
     const body={message:'Atualiza data.json',content:btoa(unescape(encodeURIComponent(JSON.stringify(state.data,null,2))))};
     if(state.fileSha)body.sha=state.fileSha;
@@ -817,7 +834,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   // build tabs
   const bar=document.getElementById('tabs-bar');
   bar.innerHTML=TABS_CONFIG.map(t=>`<button class="tab-btn${t.id===state.activeTab?' active':''}" data-tab="${t.id}" onclick="switchTab('${t.id}')">${t.label}</button>`).join('');
-  // init
+  // init: load local first, then try GitHub
+  loadLocal();
   renderAll();
   loadFromGitHub();
   // close modals on backdrop click
