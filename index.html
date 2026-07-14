@@ -104,17 +104,14 @@ tr:hover .row-actions{opacity:1}
   <h1>📋 Plano de Ação — SMG1</h1>
   <div class="header-actions">
     <button class="btn btn-secondary" onclick="openSettings()">⚙️ Config</button>
-    <button class="btn btn-primary" id="btn-add" onclick="openAddModal()">+ Nova Ação</button>
+    <button class="btn btn-primary" id="btn-new" onclick="openNew()">+ Nova Ação</button>
   </div>
 </header>
 <div class="tabs-bar" id="tabs-bar"></div>
 <div class="content">
   <div class="stats-row" id="stats-row"></div>
   <div class="toolbar" id="toolbar"></div>
-  <div class="table-wrapper">
-    <div id="table-container"></div>
-    <div id="pagination-container"></div>
-  </div>
+  <div class="table-wrapper" id="table-wrapper"></div>
 </div>
 
 <!-- ADD/EDIT MODAL -->
