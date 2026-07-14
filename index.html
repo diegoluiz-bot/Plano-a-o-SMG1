@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano de Ação — SMG1</title>
+<style>
+:root{--yellow:#FFE600;--black:#333;--bg:#f5f5f5;--white:#fff;--border:#e0e0e0;--green:#2e7d32;--green-bg:#e8f5e9;--red:#c62828;--red-bg:#ffebee;--gray:#616161;--gray-bg:#f5f5f5;--amber:#e65100;--amber-bg:#fff3e0;--blue:#1565c0;--blue-bg:#e3f2fd;--purple:#6a1b9a;--purple-bg:#f3e5f5;--radius:8px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--black)}
+header{background:var(--yellow);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;box-shadow:0 2px 4px rgba(0,0,0,.1)}
+header h1{font-size:18px;font-weight:700;color:#000}
+.header-actions{display:flex;gap:8px}
+.btn{padding:7px 16px;border-radius:6px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:#000;color:#fff}
+.btn-secondary{background:rgba(0,0,0,.1);color:#000}
+.btn-danger{background:var(--red);color:#fff}
+.btn-sm{padding:5px 12px;font-size:12px}
+.tabs-bar{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;display:flex;overflow-x:auto;scrollbar-width:none}
+.tabs-bar::-webkit-scrollbar{display:none}
+.tab-btn{padding:14px 20px;border:none;background:transparent;cursor:pointer;font-size:13px;font-weight:500;color:#666;border-bottom:3px solid transparent;white-space:nowrap;transition:all .15s}
+.tab-btn:hover{color:#000}
+.tab-btn.active{color:#000;border-bottom-color:#000;font-weight:700}
+.content{padding:24px;max-width:1400px;margin:0 auto}
+.toolbar{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.search-input{padding:8px 14px;border:1px solid var(--border);border-radius:6px;font-size:13px;width:260px;background:#fff;outline:none}
+.search-input:focus{border-color:#000}
+select.filter-select{padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:#fff;cursor:pointer;outline:none}
+.toolbar-right{margin-left:auto;display:flex;gap:8px}
+.stats-row{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;min-width:120px;text-align:center}
+.stat-card .stat-number{font-size:24px;font-weight:700}
+.stat-card .stat-label{font-size:11px;color:#888;margin-top:2px}
+.stat-card.green .stat-number{color:var(--green)}
+.stat-card.red .stat-number{color:var(--red)}
+.stat-card.amber .stat-number{color:var(--amber)}
+.stat-card.blue .stat-number{color:var(--blue)}
+.table-wrapper{background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{padding:11px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#888;background:#fafafa;border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{color:#333}
+td{padding:10px 14px;border-bottom:1px solid #f0f0f0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+td.acao{max-width:320px}
+td.obs{max-width:240px;color:#555;font-size:12px}
+td.resp{max-width:200px;font-size:12px;color:#555}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge-feito{background:var(--green-bg);color:var(--green)}
+.badge-cancelado{background:var(--gray-bg);color:var(--gray);border:1px solid #ddd}
+.badge-atrasado{background:var(--red-bg);color:var(--red)}
+.badge-andamento,.badge-em-andamento{background:var(--amber-bg);color:var(--amber)}
+.badge-nao-iniciado,.badge-não-iniciado{background:var(--blue-bg);color:var(--blue)}
+.badge-pendente{background:var(--purple-bg);color:var(--purple)}
+.badge-comprado{background:var(--green-bg);color:var(--green)}
+.cat-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#f0f0f0;color:#555}
+.cat-badge.people{background:#fce4ec;color:#880e4f}
+.cat-badge.operacao{background:#e3f2fd;color:#0d47a1}
+.row-actions{display:flex;gap:4px;opacity:0;transition:opacity .15s}
+tr:hover .row-actions{opacity:1}
+.btn-icon{padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:#fff;cursor:pointer;font-size:12px}
+.btn-icon:hover{background:#f5f5f5}
+.empty-state{text-align:center;padding:60px 24px;color:#999}
+.empty-state .empty-icon{font-size:48px;margin-bottom:12px}
+.report-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:40px;text-align:center}
+.report-card h2{font-size:20px;margin-bottom:12px}
+.report-card p{color:#666;font-size:14px;margin-bottom:20px;line-height:1.6}
+.report-card .report-icon{font-size:64px;margin-bottom:16px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px}
+.modal-overlay.hidden{display:none}
+.modal{background:#fff;border-radius:12px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff}
+.modal-header h2{font-size:16px;font-weight:700}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:#888;padding:4px 8px;border-radius:4px}
+.modal-close:hover{background:#f5f5f5}
+.modal-body{padding:24px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-grid .full{grid-column:1/-1}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:12px;font-weight:600;color:#555}
+.form-group input,.form-group select,.form-group textarea{padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit;background:#fff;outline:none;transition:border-color .15s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:#000}
+.form-group textarea{resize:vertical;min-height:80px}
+.info-box{background:#fff9e6;border:1px solid #ffe082;border-radius:6px;padding:12px 14px;font-size:12px;color:#5d4037;margin-bottom:16px;line-height:1.5}
+.settings-section{margin-bottom:20px}
+.settings-section h3{font-size:13px;font-weight:700;margin-bottom:10px;color:#555;text-transform:uppercase;letter-spacing:.05em}
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:300;display:flex;flex-direction:column;gap:8px}
+.toast{background:#333;color:#fff;padding:12px 18px;border-radius:8px;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.2);animation:slideIn .2s ease;max-width:320px}
+.toast.success{background:var(--green)}
+.toast.error{background:var(--red)}
+@keyframes slideIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-top:1px solid var(--border);font-size:12px;color:#888;background:#fafafa}
+.pagination-btns{display:flex;gap:4px}
+.page-btn{padding:4px 10px;border:1px solid var(--border);border-radius:4px;background:#fff;cursor:pointer;font-size:12px}
+.page-btn.active{background:#000;color:#fff;border-color:#000}
+.page-btn:hover:not(.active){background:#f5f5f5}
+.cycle-badges{display:flex;gap:4px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<header>
+  <h1>📋 Plano de Ação — SMG1</h1>
+  <div class="header-actions">
+    <button class="btn btn-secondary" onclick="openSettings()">⚙️ Config</button>
+    <button class="btn btn-primary" id="btn-add" onclick="openAddModal()">+ Nova Ação</button>
+  </div>
+</header>
+<div class="tabs-bar" id="tabs-bar"></div>
+<div class="content">
+  <div class="stats-row" id="stats-row"></div>
+  <div class="toolbar" id="toolbar"></div>
+  <div class="table-wrapper">
+    <div id="table-container"></div>
+    <div id="pagination-container"></div>
+  </div>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-overlay hidden" id="action-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-title">Nova Ação</h2>
+      <button class="modal-close" onclick="closeModal('action-modal')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-form-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('action-modal')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveAction()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay hidden" id="settings-modal">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <h2>⚙️ Configurações GitHub</h2>
+      <button class="modal-close" onclick="closeModal('settings-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-box">💡 Preencha abaixo para salvar alterações direto no GitHub. Somente colaboradores com <strong>write access</strong> no repositório conseguirão salvar.</div>
+      <div class="settings-section">
+        <h3>Repositório</h3>
+        <div class="form-grid">
+          <div class="form-group"><label>Dono (usuário ou org)</label><input id="s-owner" type="text" placeholder="Ex: mercadolivresmg1"></div>
+          <div class="form-group"><label>Nome do repositório</label><input id="s-repo" type="text" placeholder="Ex: plano-de-acao"></div>
+        </div>
+      </div>
+      <div class="settings-section">
+        <h3>Autenticação</h3>
+        <div class="form-group"><label>Personal Access Token (GitHub)</label><input id="s-token" type="password" placeholder="ghp_..."></div>
+        <p style="font-size:11px;color:#888;margin-top:6px">Gere em: GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens → Contents (read & write)</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('settings-modal')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveSettings()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE -->
+<div class="modal-overlay hidden" id="confirm-modal">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-header"><h2>Confirmar exclusão</h2><button class="modal-close" onclick="closeModal('confirm-modal')">✕</button></div>
+    <div class="modal-body"><p style="font-size:14px">Tem certeza que deseja excluir este item? Esta operação não pode ser desfeita.</p></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('confirm-modal')">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Excluir</button>
+    </div>
+  </div>
+</div>
+<div class="toast-container" id="toast-container"></div>
+<script>
+// ===================== TABS CONFIG =====================
+const TABS_CONFIG=[
+  {id:'plano-acao',label:'Plano de Ação - Daily/Weekly',type:'plano-acao'},
+  {id:'plano-guerra',label:'Plano de Guerra 2026',type:'plano-guerra'},
+  {id:'compras',label:'Compras',type:'compras'},
+  {id:'report',label:'Report',type:'report'},
+  {id:'papeis',label:'Papéis e Responsabilidades',type:'papeis'}
+];
+
+// ===================== DATA =====================
+const INITIAL_DATA={
+"plano-acao":[
+{id:1,agenda:"Weekly",indicador:"Aduana",acao:"Trazer a abertura de aduanas realizadas por transportadora devido impacto da Nepomuceno em quantidade de aduanas realizadas",responsavel:"Gustavo Cruz",inicio:"13/01/2025",prazo:"28/01/2025",status:"Feito",conclusao:"Estamos trazendo nas reunições os indicadores abertos"},
+{id:2,agenda:"Weekly",indicador:"ROS",acao:"Marcar treinamento com liderança sobre as tratativas de ROS",responsavel:"Jacqueline De Jesus Dutra Mota",inicio:"03/02/2026",prazo:"18/02/2026",status:"Feito",conclusao:"Treinamento realizado com a liderança"},
+{id:3,agenda:"Weekly",indicador:"",acao:"Realizar a separação de indicadores por liderança / OP3",responsavel:"Ranieri Pereira Gabriel / Ana Luisa Nogueira Duarte",inicio:"03/02/2026",prazo:"18/02/2026",status:"Feito",conclusao:"Foi separado e divulgado o material para liderança / OPL3"},
+{id:4,agenda:"Weekly",indicador:"CIA",acao:"Fazer um dash de ofensores de CIA e COA diariamente",responsavel:"Gustavo Cruz",inicio:"03/02/2026",prazo:"18/02/2026",status:"Feito",conclusao:""},
+{id:5,agenda:"Weekly",indicador:"Absenteísmo",acao:"Ação de internalização de temporários mais aptos, e desligamento dos ofensores por abandono.",responsavel:"Ranieri Pereira Gabriel",inicio:"19/01/2026",prazo:"19/02/2026",status:"Feito",conclusao:""},
+{id:6,agenda:"Weekly",indicador:"TMC",acao:"Validação de Ajudante com os drives de volumoso para agilizar a expedição dos volumosos",responsavel:"Ranieri Pereira Gabriel",inicio:"02/02/2026",prazo:"14/02/2026",status:"Feito",conclusao:""},
+{id:7,agenda:"Weekly",indicador:"Inventário",acao:"Analise diaria dos pacotes faltantes com um report extratificado",responsavel:"Jones William Emerenciano",inicio:"26/01/2026",prazo:"14/02/2026",status:"Feito",conclusao:""},
+{id:8,agenda:"Weekly",indicador:"Aduana",acao:"Identificação mais nitida das gaiolas durante o processamento para medição de erros, por rua para tratatida individual",responsavel:"Jaderson Da Silva Lellis",inicio:"26/01/2026",prazo:"14/02/2026",status:"Feito",conclusao:""},
+{id:9,agenda:"Weekly",indicador:"CIA",acao:"Refazer todos os QR's code para validação novamente dos codigos para tratativa dos ofensores",responsavel:"Suellen Lorrayne Macedo",inicio:"02/02/2026",prazo:"04/02/2026",status:"Feito",conclusao:""},
+{id:10,agenda:"Weekly",indicador:"Treinamentos",acao:"Cobrar o Alexandre sobre erro de treinamento",responsavel:"Marcos Goncalves Da Silveira",inicio:"31/03/2026",prazo:"07/04/2026",status:"Feito",conclusao:"Erro ajustado, TL refez os treinamentos e subiu o percentual"},
+{id:11,agenda:"Weekly",indicador:"FAG",acao:"Checar melhor formato para estratificação do pós sorting para buscar melhor resultado FAG",responsavel:"Daiane Baptista Arantes",inicio:"31/03/2026",prazo:"07/04/2026",status:"Feito",conclusao:""},
+{id:12,agenda:"Weekly",indicador:"FAG",acao:"Rever processo de pacotes do inventario para mesa de ajuda - Criar time mesa ciclo T2",responsavel:"Magno Lima Costa Cruz",inicio:"31/03/2026",prazo:"07/04/2026",status:"Feito",conclusao:"Time treinado por uma semana no T1, com início das atividades no T2 na segunda-feira, 25/05."},
+{id:13,agenda:"Weekly",indicador:"TMC",acao:"Realinhar processo de finalização expedição AM para acompanhar os veiculos atrasados e organização da area",responsavel:"Jaderson Da Silva Lellis / Marcos Goncalves Da Silveira",inicio:"31/03/2026",prazo:"01/04/2026",status:"Feito",conclusao:"Vagas mapeadas para carregamento de primeira onda do volumoso"},
+{id:14,agenda:"Weekly",indicador:"DIT",acao:"Puxar projeto de identificação de buffer volumoso > Stage Zones em SVC - Picking Multi Bakers",responsavel:"Thiago Henrique Franca Mendes / Jaderson Da Silva Lellis",inicio:"31/03/2026",prazo:"07/04/2026",status:"Feito",conclusao:""},
+{id:15,agenda:"Weekly",indicador:"TMC",acao:"Garantir organização durante a expedição de pacotes retirados na expedição",responsavel:"Daiane Baptista Arantes",inicio:"31/03/2026",prazo:"01/04/2026",status:"Cancelado",conclusao:""},
+{id:16,agenda:"Weekly",indicador:"Produtividade",acao:"Report hora a hora ser realizado pelo time OPL3",responsavel:"Ana Luisa Nogueira Duarte",inicio:"31/03/2026",prazo:"01/04/2026",status:"Cancelado",conclusao:""},
+{id:17,agenda:"Weekly",indicador:"ROS",acao:"Estudar base SHE para conseguirmos enviar abertura de ROS por REP",responsavel:"Leticia De Aquino Viturino Leite",inicio:"07/04/2026",prazo:"10/04/2026",status:"Cancelado",conclusao:"Ação estava com Ana Nogueira, alterado para TL do tema, nova ação aberta"},
+{id:18,agenda:"Weekly",indicador:"Produtividade",acao:"Criar checklist de aderência ao inicio do turno",responsavel:"Ranieri Pereira Gabriel",inicio:"07/04/2026",prazo:"14/04/2026",status:"Cancelado",conclusao:""},
+{id:19,agenda:"Weekly",indicador:"Inventário",acao:"Definir escala do T2 de OPL2 devido férias do Clelbert",responsavel:"Magno Lima Costa Cruz / Ana Luisa Nogueira Duarte",inicio:"07/04/2026",prazo:"14/04/2026",status:"Feito",conclusao:""},
+{id:20,agenda:"Weekly",indicador:"Inventário",acao:"Garantir a tratativa de devolução",responsavel:"Magno Lima Costa Cruz",inicio:"07/04/2026",prazo:"14/04/2026",status:"Feito",conclusao:""},
+{id:21,agenda:"Weekly",indicador:"Produtividade",acao:"Revisão da chegada de origem vs produtividade (FLOW)",responsavel:"Ana Luisa Nogueira Duarte / Ranieri Pereira Gabriel / Daiane Baptista Arantes",inicio:"07/04/2026",prazo:"14/04/2026",status:"Cancelado",conclusao:""},
+{id:22,agenda:"Daily",indicador:"FAG",acao:"Estratificar pós sorting diariamente e divulgar no grupo de report",responsavel:"Raphael Augusto Barbosa",inicio:"09/05/2026",prazo:"12/05/2026",status:"Feito",conclusao:""},
+{id:23,agenda:"Daily",indicador:"FAG",acao:"Estratificar pós sorting diariamente e divulgar no grupo de report",responsavel:"Jaderson Da Silva Lellis",inicio:"09/05/2026",prazo:"12/05/2026",status:"Feito",conclusao:"Inicio 12/05"},
+{id:24,agenda:"Weekly",indicador:"LMS",acao:"Definir responsável pelo acompanhamento e gestão do LMS utilização ciclo AM",responsavel:"Jaderson / Mateus / Thiago",inicio:"12/05/2026",prazo:"13/05/2026",status:"Feito",conclusao:"Dionathan e Luciene LMS"},
+{id:25,agenda:"Weekly",indicador:"LMS",acao:"Definir responsável pelo acompanhamento e gestão do LMS utilização ciclo PM",responsavel:"Jones / Raphael",inicio:"12/05/2026",prazo:"13/05/2026",status:"Feito",conclusao:"A Giovana já nos ajuda, Ana Medeiros será focal na operação"},
+{id:26,agenda:"Weekly",indicador:"COA",acao:"Capacitar os novos colaboradores AM no indicador, puxar tema com Thaygla",responsavel:"Marcos Goncalves Da Silveira",inicio:"12/05/2026",prazo:"19/05/2026",status:"Feito",conclusao:"100% dos novatos treinados em 20/05"},
+{id:27,agenda:"Weekly",indicador:"CIA",acao:"Capacitar os novos colaboradores PM no indicador, puxar tema com Thaygla",responsavel:"Raphael Augusto Barbosa",inicio:"12/05/2026",prazo:"19/05/2026",status:"Feito",conclusao:"Previsão 20/05"},
+{id:28,agenda:"Weekly",indicador:"ETA Line Haul",acao:"Puxar com time de LH ações para atrasos da W19",responsavel:"Daiane Baptista Arantes",inicio:"12/05/2026",prazo:"19/05/2026",status:"Feito",conclusao:"Demos uma reduzida nos impactos controláveis"},
+{id:29,agenda:"Weekly",indicador:"OOT",acao:"Validar e definir o ponto de saída dos veículos",responsavel:"Jaderson Da Silva Lellis",inicio:"12/05/2026",prazo:"16/06/2026",status:"Cancelado",conclusao:"Nesse momento não preocupar com essa ação"},
+{id:30,agenda:"Weekly",indicador:"OOT",acao:"Aprofundar análise do novo indicador e identificar gaps operacionais (OOT WAVES 3.0)",responsavel:"Raphael Augusto Barbosa",inicio:"12/05/2026",prazo:"19/05/2026",status:"Feito",conclusao:"Identificado oportunidade no ciclo PM, 20% sem saída"},
+{id:31,agenda:"Weekly",indicador:"Delivery Sucess",acao:"Insucesso a partir de 10h conforme apontamento no aplicativo do ME (manter portão aberto) - Colocar aviso no portão sobre horarios",responsavel:"Jones William Emerenciano",inicio:"12/05/2026",prazo:"19/05/2026",status:"Feito",conclusao:"Alinhado com time da mesa"},
+{id:32,agenda:"Weekly",indicador:"Delivery Sucess",acao:"Avaliar possibilidade de estender insucesso no domingo devido abertura de operação SD",responsavel:"Magno Lima Costa Cruz",inicio:"12/05/2026",prazo:"19/05/2026",status:"Cancelado",conclusao:"Aguardando estudo da nova escala e horário"},
+{id:33,agenda:"Daily",indicador:"Aduana",acao:"Espelhar do AM p/ PM o modelo de indentificação do volumoso por posição",responsavel:"Jones William Emerenciano",inicio:"12/05/2026",prazo:"19/05/2026",status:"Feito",conclusao:"Iniciando em 15/05, tracionado pelo OPL2 Bruno Cardoso"},
+{id:34,agenda:"Daily",indicador:"Produtividade",acao:"Checar preechimento RIMES p conferencia do resultado de PROD no Gerot",responsavel:"Ranieri Pereira Gabriel",inicio:"13/05/2026",prazo:"19/05/2026",status:"Feito",conclusao:""},
+{id:35,agenda:"Daily",indicador:"TRIR",acao:"Garantir preenchimento COSEG nas datas corretas",responsavel:"Leticia De Aquino Viturino Leite",inicio:"13/05/2026",prazo:"02/06/2026",status:"Cancelado",conclusao:"Sendo realizado pelo TL Sr."},
+{id:36,agenda:"Daily",indicador:"ROS",acao:"Momento de ROS todos os dias, com foco nas terças dia mais tranquilo",responsavel:"Jaderson / Thiago / Mateus",inicio:"15/05/2026",prazo:"19/05/2026",status:"Feito",conclusao:"AM realizado em 19/05 / PM realizado 16/05"},
+{id:37,agenda:"Daily",indicador:"FAG",acao:"Garantir utilização do MAPA DO CALOR durante processamento",responsavel:"Mateus Ferrari Bernardes",inicio:"15/05/2026",prazo:"19/05/2026",status:"Feito",conclusao:""},
+{id:38,agenda:"Daily",indicador:"FAG",acao:"Garantir utilização do MAPA DO CALOR durante processamento",responsavel:"Raphael Augusto Barbosa",inicio:"15/05/2026",prazo:"19/05/2026",status:"Feito",conclusao:""},
+{id:39,agenda:"Daily",indicador:"OOT",acao:"Definar as vagas e horario de corte para carregamento AM",responsavel:"Jaderson Da Silva Lellis",inicio:"15/05/2026",prazo:"20/05/2026",status:"Feito",conclusao:""},
+{id:40,agenda:"Daily",indicador:"BPP",acao:"Definir responsável por aprovar avarias em todos os turnos",responsavel:"Daiane Baptista Arantes",inicio:"15/05/2026",prazo:"20/05/2026",status:"Feito",conclusao:"T3 - Thiago / T2: Magno / T1: Jones"},
+{id:41,agenda:"Weekly",indicador:"LMS",acao:"Correção atribuição de lider do time terceiro no logistics para LMS",responsavel:"Ranieri Pereira Gabriel",inicio:"19/05/2026",prazo:"22/05/2026",status:"Feito",conclusao:"Time fixo na lista de presença atualizado na W20"},
+{id:42,agenda:"Weekly",indicador:"SPR",acao:"Definir quem irá acompanhar o SPR LM",responsavel:"Ranieri Pereira Gabriel",inicio:"19/05/2026",prazo:"22/05/2026",status:"Feito",conclusao:""},
+{id:43,agenda:"Weekly",indicador:"Delay",acao:"Fazer analise aprofundada no Delay H&B",responsavel:"Jaderson Da Silva Lellis",inicio:"19/05/2026",prazo:"22/05/2026",status:"Cancelado",conclusao:"Buscando material para iniciar analise"},
+{id:44,agenda:"Weekly",indicador:"OOT",acao:"Garantir colaboradores experiente na entrada e saida dos carros no domingo",responsavel:"Charles Henrique Ribeiro Firmino / Denisson Da Silva Mendes",inicio:"19/05/2026",prazo:"22/05/2026",status:"Cancelado",conclusao:""},
+{id:45,agenda:"Daily",indicador:"Delivery Sucess",acao:"Reunião com o time da torre, tratar SPR, ORH e revisitar estratégia de roteirização para rotas _V (terça-feira)",responsavel:"Charles Henrique Ribeiro Firmino",inicio:"19/05/2026",prazo:"25/05/2026",status:"Feito",conclusao:"Material apresentado weekly 09/06/26"},
+{id:46,agenda:"Daily",indicador:"Delivery Sucess",acao:"Revisão da escala de folgas dos drivers às terças",responsavel:"Denisson Da Silva Mendes",inicio:"19/05/2026",prazo:"25/05/2026",status:"Feito",conclusao:""},
+{id:47,agenda:"Daily",indicador:"Volume Forecast",acao:"Revisar fator aplicado em volumosos na terça (estouro PM)",responsavel:"Ranieri Pereira Gabriel / Daiane Baptista Arantes",inicio:"19/05/2026",prazo:"25/05/2026",status:"Feito",conclusao:"Reunião de FLOW às 09:15h"},
+{id:48,agenda:"Daily",indicador:"Delivery Sucess",acao:"Entender e tratar frota em manutenção",responsavel:"Denisson Da Silva Mendes",inicio:"19/05/2026",prazo:"25/05/2026",status:"Feito",conclusao:""},
+{id:49,agenda:"Daily",indicador:"OOT",acao:"Iniciar identificação das vagas no projeto stage zone",responsavel:"Jones William Emerenciano / Jaderson Da Silva Lellis",inicio:"20/05/2026",prazo:"29/06/2026",status:"Feito",conclusao:"Criação das areas em 26/05 - Jones ** QR em confecção"},
+{id:50,agenda:"Daily",indicador:"Absenteísmo",acao:"Comitê de desligamento para reunião de 30/05/2026",responsavel:"Daiane Baptista Arantes",inicio:"21/05/2026",prazo:"26/05/2026",status:"Feito",conclusao:"Comitê de people"},
+{id:51,agenda:"Weekly",indicador:"BPP",acao:"Enviar final do dia report de DAMAGED OPERACION para mostrar p TLs principais tipo de produto avariado na operação",responsavel:"Magno Lima Costa Cruz",inicio:"25/05/2026",prazo:"26/05/2026",status:"Atrasado",conclusao:"Ação time ICQA"},
+{id:52,agenda:"Weekly",indicador:"FAG",acao:"Ops clock não deixa margem de tempo para realizar as auditorias do ciclo - plano de contenção até a virada",responsavel:"Jaderson Da Silva Lellis",inicio:"25/05/2026",prazo:"29/05/2026",status:"Feito",conclusao:"Ação time ICQA"},
+{id:53,agenda:"Weekly",indicador:"ROS",acao:"Ação diaria abertura de ROS para atingir meta mensal de 940",responsavel:"Mateus / Jaderson / Raphael / Jones",inicio:"26/05/2026",prazo:"31/05/2026",status:"Feito",conclusao:"Meta cumprida em 29/05"},
+{id:54,agenda:"Weekly",indicador:"Absenteísmo",acao:"Rever dia semana entrada de novatos Meli e temporario - Puxar agenda com TA",responsavel:"Ranieri Pereira Gabriel",inicio:"26/05/2026",prazo:"28/05/2026",status:"Feito",conclusao:"Alinhado às segunda Meli e terça temporario/PT"},
+{id:55,agenda:"Weekly",indicador:"Absenteísmo",acao:"Definir um responsavel por direcionar o novato no primeiro dia sozinho na operação",responsavel:"Daiane Baptista Arantes",inicio:"26/05/2026",prazo:"02/06/2026",status:"Feito",conclusao:"PM - PAMELA e LORENA VITORIA / AM - NATANAEL"},
+{id:56,agenda:"Weekly",indicador:"CIA",acao:"Definir responsaveis por acompanhamento CIA e COA in loco",responsavel:"Jaderson Da Silva Lellis",inicio:"26/05/2026",prazo:"02/06/2026",status:"Feito",conclusao:""},
+{id:57,agenda:"Weekly",indicador:"ROS",acao:"Integrar ferramenta utilizada time lastmile no registro de ocorrências com SHE360/ROS",responsavel:"Ranieri Pereira Gabriel",inicio:"02/06/2026",prazo:"09/06/2026",status:"Cancelado",conclusao:""},
+{id:58,agenda:"Weekly",indicador:"Absenteísmo",acao:"Garantir preenchimento do controle de faltas W23",responsavel:"Thiago / Jaderson / Mateus / Leticia / Jones / Raphael / Magno",inicio:"02/06/2026",prazo:"09/06/2026",status:"Cancelado",conclusao:"Não foi realizado por todos do time da liderança, pensar novo plano"},
+{id:59,agenda:"Weekly",indicador:"Absenteísmo",acao:"Identificar e mostrar p time de TA impactos com entrada de Meli (onwboarding) nas quintas/sextas",responsavel:"Ramon Andrade Gomes / Daiane / Ranieri",inicio:"02/06/2026",prazo:"09/06/2026",status:"Feito",conclusao:"E-mail enviado por Ramon em 01/06"},
+{id:60,agenda:"Weekly",indicador:"COA",acao:"Identificar responsavel para atuar em problema recorrente no PM com registro automatico de COA",responsavel:"Jones William Emerenciano",inicio:"02/06/2026",prazo:"09/06/2026",status:"Feito",conclusao:""},
+{id:61,agenda:"Weekly",indicador:"CIA",acao:"Garantir no briefing tratativa ofensores CIA e COA",responsavel:"Marcos Goncalves Da Silveira",inicio:"02/06/2026",prazo:"03/06/2026",status:"Feito",conclusao:"Inicio 10/06"},
+{id:62,agenda:"Weekly",indicador:"CIA",acao:"Garantir no briefing tratativa ofensores CIA e COA",responsavel:"Mateus Ferrari Bernardes",inicio:"02/06/2026",prazo:"03/06/2026",status:"Feito",conclusao:"Inicio 10/06"},
+{id:63,agenda:"Weekly",indicador:"TMC",acao:"Acompanhar W23 5 vagas ciclo AM para identificar oportunidades TMC",responsavel:"Leticia De Aquino Viturino Leite",inicio:"02/06/2026",prazo:"09/06/2026",status:"Cancelado",conclusao:""},
+{id:64,agenda:"Weekly",indicador:"TMC",acao:"Definir modelo de acompanhamento TMC e estouro de aduana durante a expedição - utilizar material criado Ericles",responsavel:"Raphael Augusto Barbosa",inicio:"02/06/2026",prazo:"09/06/2026",status:"Feito",conclusao:"Farol diario estratificando a % de TMC por turno"},
+{id:65,agenda:"Weekly",indicador:"Delivery Sucess",acao:"Programar 2 agendas semana para tratar 3 principais transportadoras ofensoras DS",responsavel:"Charles Henrique Ribeiro Firmino",inicio:"02/06/2026",prazo:"09/06/2026",status:"Feito",conclusao:"Basepex 10/06 às 13:30h > Imediato 10/06 > ALC 10/06"},
+{id:66,agenda:"Weekly",indicador:"FAG",acao:"Garantir tratativa na mesa domingo, desenhar modelo com virada de escala",responsavel:"Magno Lima Costa Cruz",inicio:"02/06/2026",prazo:"09/06/2026",status:"Atrasado",conclusao:""},
+{id:67,agenda:"Weekly",indicador:"FAG",acao:"Garantir tratativa na mesa segunda-feira no PM",responsavel:"Jones William Emerenciano / Raphael Augusto Barbosa",inicio:"02/06/2026",prazo:"08/06/2026",status:"Feito",conclusao:"Feito em 15/06"},
+{id:68,agenda:"Weekly",indicador:"BPP",acao:"Montar modelo passagem de turno, incluir aprovação de avarias",responsavel:"Mateus Ferrari Bernardes",inicio:"02/06/2026",prazo:"09/06/2026",status:"Feito",conclusao:""},
+{id:69,agenda:"Weekly",indicador:"BPP",acao:"Programar inclusão da OPL3 Bruna - Last mile na operação p tracionar ações sacas",responsavel:"Denisson / Charles",inicio:"02/06/2026",prazo:"09/06/2026",status:"Cancelado",conclusao:"Reavaliar devido ausência Helaine"},
+{id:70,agenda:"Weekly",indicador:"CIA",acao:"Alterar para assistente os OPL3 + OPL2",responsavel:"Marcos Goncalves Da Silveira",inicio:"02/06/2026",prazo:"09/06/2026",status:"Feito",conclusao:""},
+{id:71,agenda:"Weekly BPP",indicador:"BPP",acao:"Treinar time fixo do LH PM no 360º da descarga de linha branca e bulky",responsavel:"Raphael Augusto Barbosa",inicio:"03/06/2026",prazo:"09/06/2026",status:"Feito",conclusao:""},
+{id:72,agenda:"Weekly BPP",indicador:"BPP",acao:"Treinar time fixo do LH AM no 360º da descarga de linha branca e bulky",responsavel:"Mateus Ferrari Bernardes",inicio:"03/06/2026",prazo:"09/06/2026",status:"Feito",conclusao:""},
+{id:73,agenda:"Weekly BPP",indicador:"BPP",acao:"Treinar time fixo do LH SD/CHP no 360º da descarga de linha branca e bulky",responsavel:"Magno Lima Costa Cruz",inicio:"03/06/2026",prazo:"09/06/2026",status:"Feito",conclusao:""},
+{id:74,agenda:"COSEG",indicador:"TRIR",acao:"Reciclar time operacional na movimentação de gaiola",responsavel:"Marcos Goncalves Da Silveira",inicio:"03/06/2026",prazo:"09/06/2026",status:"Feito",conclusao:""},
+{id:75,agenda:"Weekly",indicador:"TMC",acao:"Criar material que permita rastrear o TMC em tempo real - Puxar com OPL3",responsavel:"Denisson Da Silva Mendes",inicio:"09/06/2026",prazo:"16/06/2026",status:"Feito",conclusao:""},
+{id:76,agenda:"Daily",indicador:"CIA",acao:"Notificar empresas de diaristas para acompanhamento e possivel bloqueio diarista ofensor",responsavel:"Jaderson Da Silva Lellis",inicio:"09/06/2026",prazo:"10/06/2026",status:"Feito",conclusao:"Comunicado feito em 09/06"},
+{id:77,agenda:"Daily",indicador:"Delivery Sucess",acao:"Trazer ações MLP ALC para tracionar em DS",responsavel:"Denisson / Charles",inicio:"09/06/2026",prazo:"23/06/2026",status:"Feito",conclusao:""},
+{id:78,agenda:"Weekly",indicador:"BPP",acao:"Garantir identificação no pacotes que retornam no insucesso",responsavel:"Jones / Magno",inicio:"16/06/2026",prazo:"23/06/2026",status:"Feito",conclusao:""},
+{id:79,agenda:"Weekly",indicador:"FAG",acao:"Calendarizar o que seria necessario entregar na diario no indicador FAG para garantir o resultado da semana",responsavel:"Daiane Baptista Arantes",inicio:"16/06/2026",prazo:"17/06/2026",status:"Feito",conclusao:"Seria necessario fazer 83% de terça à sábado para garantir semana"},
+{id:80,agenda:"Weekly",indicador:"Delivery Sucess",acao:"Garantir report do insucesso diario",responsavel:"Jones William Emerenciano",inicio:"16/06/2026",prazo:"23/06/2026",status:"Feito",conclusao:""},
+{id:81,agenda:"Weekly",indicador:"DS",acao:"Mapear atividades do time de last mile para identificarmos oportunidade e montar estrutura de torre/monitoramento DS hora a hora",responsavel:"Ranieri / Charles",inicio:"16/06/2026",prazo:"16/07/2026",status:"Feito",conclusao:""},
+{id:82,agenda:"Weekly",indicador:"CIA",acao:"Garantir material que vai trazer ofensores CIA e COA em tempo real",responsavel:"Marcos Goncalves Da Silveira",inicio:"16/06/2026",prazo:"17/06/2026",status:"Atrasado",conclusao:"Iniciando testes em 25/06"},
+{id:83,agenda:"Weekly",indicador:"Absenteísmo",acao:"Na estratificação ABS trazer os nomes dos colaboradores mais ofensores na semana",responsavel:"Diego Luiz Da Silva",inicio:"16/06/2026",prazo:"23/06/2026",status:"Feito",conclusao:""},
+{id:84,agenda:"Weekly",indicador:"ENG",acao:"Desenhar escala 5X2 time LM",responsavel:"Ranieri Pereira Gabriel",inicio:"23/06/2026",prazo:"23/07/2026",status:"Em andamento",conclusao:""},
+{id:85,agenda:"Weekly",indicador:"Produtividade",acao:"Identificar oportunidades HC produtividade sacas (material compartilhado por Rani)",responsavel:"Thiago Henrique Franca Mendes",inicio:"23/06/2026",prazo:"30/06/2026",status:"Feito",conclusao:""},
+{id:86,agenda:"Daily",indicador:"TMC",acao:"Dia D time liderança no piso na expedição do AM, fazer divisão de vagas, utilizar material de apoio TMC",responsavel:"Todos",inicio:"23/06/2026",prazo:"25/06/2026",status:"Feito",conclusao:"Retirada de pcts / fiorinos que não comportam / demora tratativa dispatcher"},
+{id:87,agenda:"Daily",indicador:"CIA",acao:"Estratificar ofensores diaristas CIA e COA para atuar com as empresas terceiras",responsavel:"Marcos Goncalves Da Silveira",inicio:"23/06/2026",prazo:"24/06/2026",status:"Feito",conclusao:"Informar os nomes hoje 25/06"},
+{id:88,agenda:"Daily",indicador:"ROS",acao:"Estudar base SHE para conseguirmos enviar abertura de ROS por REP",responsavel:"Leticia De Aquino Viturino Leite",inicio:"23/06/2026",prazo:"25/06/2026",status:"Feito",conclusao:"Não é possivel por REP, mas já temos uma base pronta"},
+{id:89,agenda:"Daily",indicador:"TMC",acao:"PS para acompanhar TMC durante expedição, utilizando material desenvolvido pelo OPL3 Ericlis",responsavel:"Raphael / Leticia",inicio:"23/06/2026",prazo:"25/06/2026",status:"Feito",conclusao:""},
+{id:90,agenda:"Daily",indicador:"DIT",acao:"Multiplicar as ações para PS para remanejar pacotes para rotas viáveis",responsavel:"Mateus Ferrari Bernardes",inicio:"25/06/2026",prazo:"30/06/2026",status:"Feito",conclusao:"Planilha Bruna"},
+{id:91,agenda:"Daily",indicador:"OOT",acao:"Fazer controle junto ao time LM veiculos de volumosos sem ajudante",responsavel:"Raphael / Leticia / Denisson / Charles",inicio:"25/06/2026",prazo:"07/06/2026",status:"Cancelado",conclusao:""},
+{id:92,agenda:"Daily",indicador:"TMC",acao:"Dia D time liderança no piso na expedição do AM (2)",responsavel:"Todos",inicio:"25/06/2026",prazo:"02/07/2026",status:"Feito",conclusao:"AM com OPL2 PM com acomp. TL no chão, dividindo OPL2 por vagas"},
+{id:93,agenda:"Daily",indicador:"Absenteísmo",acao:"Acompanhar dia de entrevistas feitas pelas consultorias Meli - Faculdade Pitagoras (seleção para Contagem acontece às quartas)",responsavel:"Jaderson Da Silva Lellis",inicio:"25/06/2026",prazo:"06/07/2026",status:"Feito",conclusao:""},
+{id:94,agenda:"Daily",indicador:"COA",acao:"Tratar ofensores CIA do dia 24/06",responsavel:"Todos",inicio:"25/06/2026",prazo:"01/07/2026",status:"Feito",conclusao:""},
+{id:95,agenda:"Daily",indicador:"CIA",acao:"Tratar ofensores COA do dia 24/06",responsavel:"Todos",inicio:"25/06/2026",prazo:"01/07/2026",status:"Feito",conclusao:""},
+{id:96,agenda:"Daily",indicador:"FOS",acao:"Entender motivo das 3 origens mais ofensoras dia 24/06",responsavel:"Jones / Magno",inicio:"25/06/2026",prazo:"30/06/2026",status:"Feito",conclusao:""},
+{id:97,agenda:"Daily",indicador:"TMC",acao:"Programar briefing semanal com os dispacthers e lideres operacionais",responsavel:"Charles / Denisson",inicio:"25/06/2026",prazo:"30/06/2026",status:"Feito",conclusao:"Todas as quartas-feira pós expedição"},
+{id:98,agenda:"Weekly BPP",indicador:"BPP",acao:"Garantir informação e identificação pacotes conferidos ou reembalados na mesa de PS",responsavel:"Jones / Mateus / Magno",inicio:"25/06/2026",prazo:"07/07/2026",status:"Feito",conclusao:""},
+{id:99,agenda:"Weekly BPP",indicador:"BPP",acao:"Alinhamento com time PM sobre conferencia de embalagem no momento recebimento insucesso - investigação de fraude/roubo",responsavel:"Jones William Emerenciano",inicio:"25/06/2026",prazo:"07/07/2026",status:"Feito",conclusao:""},
+{id:100,agenda:"Weekly",indicador:"DIT",acao:"Multiplicar as ações para PS sobre remanejar pacotes retirados durante expedição (boa pratica com apoio Bruna - LM)",responsavel:"Leticia / Raphael",inicio:"30/06/2026",prazo:"07/07/2026",status:"Feito",conclusao:""},
+{id:101,agenda:"Weekly",indicador:"BPP",acao:"Treinamento manuseio espelho com 100% do time operacional - AM, PM, PT e diaristas - Entregar evidência (lista e foto)",responsavel:"Marcos Goncalves Da Silveira",inicio:"30/06/2026",prazo:"07/07/2026",status:"Feito",conclusao:"Feito! Pasta com as evidencias: Manuseio de espelhos"},
+{id:102,agenda:"Weekly",indicador:"DS",acao:"Ação com time analistas torre para entender e rever oportunidades SPR/ORH DE _V (ofensores DS)",responsavel:"Charles Henrique Ribeiro Firmino",inicio:"30/06/2026",prazo:"07/07/2026",status:"Feito",conclusao:""},
+{id:103,agenda:"Weekly",indicador:"OOT",acao:"Garantir bipe do QR da gaiola assim que o veiculo chegar na vaga - ação com focal TMC",responsavel:"Jaderson / Raphael",inicio:"30/06/2026",prazo:"07/07/2026",status:"Feito",conclusao:""},
+{id:104,agenda:"Weekly",indicador:"OOT",acao:"Garantir gaiolas ofensoras FAG sejam fechadas ao finalizar o processo, garantindo que motorista não faça 1º bipe antes de encerrar",responsavel:"Jones / Mateus",inicio:"30/06/2026",prazo:"07/07/2026",status:"Feito",conclusao:""},
+{id:105,agenda:"Weekly",indicador:"OOT",acao:"Conexão com SMG8 para pegar boas praticas OOT (SVC atingindo meta)",responsavel:"Raphael / Jaderson",inicio:"30/06/2026",prazo:"07/07/2026",status:"Feito",conclusao:""},
+{id:106,agenda:"Weekly",indicador:"Produtividade",acao:"Desenhar fluxo com time de IS para manutenção prevetiva impressoras estações",responsavel:"Daiane / Ranieri",inicio:"30/06/2026",prazo:"07/07/2026",status:"Atrasado",conclusao:"Primeiro momento aconteceu em 02/07, aguardando retorno com fluxo"},
+{id:107,agenda:"Weekly",indicador:"OPS Clock",acao:"Divisão dos grupos de trabalho x nova proposta de escala",responsavel:"Todos",inicio:"30/06/2026",prazo:"14/07/2026",status:"Em andamento",conclusao:""},
+{id:108,agenda:"Weekly",indicador:"SHE",acao:"Enviar folder no grupão Meli SMG1 com orientações sobre regras de segurança motorista ao acessar operação",responsavel:"Leticia De Aquino Viturino Leite",inicio:"30/06/2026",prazo:"07/07/2026",status:"Feito",conclusao:""},
+{id:109,agenda:"Weekly",indicador:"SHE",acao:"Guemba semanal com REP, com foco em segurança, desenhar fluxo e foco, documentar e registrar no grupo SHE",responsavel:"Leticia De Aquino Viturino Leite",inicio:"30/06/2026",prazo:"14/07/2026",status:"Feito",conclusao:""},
+{id:110,agenda:"Weekly",indicador:"Produtividade",acao:"Acionar time FLOW para entender prod x CAP sacas",responsavel:"Daiane Baptista Arantes",inicio:"30/06/2026",prazo:"14/07/2026",status:"Não iniciado",conclusao:""},
+{id:111,agenda:"Weekly",indicador:"BPP",acao:"Criar stage exclusivo para espelho no layout ciclo PM (ciclo AM já acontece)",responsavel:"Jones William Emerenciano",inicio:"07/07/2026",prazo:"14/07/2026",status:"Feito",conclusao:""},
+{id:112,agenda:"Weekly",indicador:"ROS",acao:"Fechamento ROS semanalmente, final do mês estar zerado",responsavel:"Leticia De Aquino Viturino Leite",inicio:"07/07/2026",prazo:"14/07/2026",status:"Feito",conclusao:""},
+{id:113,agenda:"Weekly",indicador:"ROS",acao:"Marcar consulta com medico do trabalho para colaboradora Kelly (chamar Nesiane)",responsavel:"Leticia De Aquino Viturino Leite",inicio:"07/07/2026",prazo:"14/07/2026",status:"Cancelado",conclusao:"Colaboradora desligada"},
+{id:114,agenda:"Weekly",indicador:"DIT",acao:"Entender motivo do DIT NEX está alto em 07/07",responsavel:"Charles Henrique Ribeiro Firmino",inicio:"07/07/2026",prazo:"07/07/2026",status:"Cancelado",conclusao:""},
+{id:115,agenda:"Weekly",indicador:"DIT",acao:"Entender motivo do DIT noshow está alto em 07/07",responsavel:"Charles Henrique Ribeiro Firmino",inicio:"07/07/2026",prazo:"07/07/2026",status:"Cancelado",conclusao:""},
+{id:116,agenda:"Weekly",indicador:"PET",acao:"Garantir utilização APP VIO entrada de veiculos na expedição",responsavel:"Thiago / Marcos",inicio:"07/07/2026",prazo:"14/07/2026",status:"Não iniciado",conclusao:""},
+{id:117,agenda:"Weekly",indicador:"PET",acao:"Garantir utilização APP VIO LH",responsavel:"Thiago / Marcos",inicio:"07/07/2026",prazo:"14/07/2026",status:"Em andamento",conclusao:""},
+{id:118,agenda:"Weekly",indicador:"PET",acao:"Garantir utilização APP VIO insucesso",responsavel:"Thiago / Marcos",inicio:"07/07/2026",prazo:"14/07/2026",status:"Não iniciado",conclusao:""},
+{id:119,agenda:"Weekly BPP",indicador:"BPP",acao:"Espelhos e TVs recebidos no insucesso devem voltar p STAGE",responsavel:"Magno / Marcos",inicio:"08/07/2026",prazo:"15/07/2026",status:"Não iniciado",conclusao:""},
+{id:120,agenda:"Weekly BPP",indicador:"BPP",acao:"Espelhos e TVs retirados em expedição devem voltar p STAGE",responsavel:"Todos",inicio:"08/07/2026",prazo:"15/07/2026",status:"Não iniciado",conclusao:""},
+{id:121,agenda:"Weekly BPP",indicador:"BPP",acao:"Interagir com time de qualidade (ICQA) para atuar na causa raiz de avaria em SMG1 - backlog",responsavel:"Charles Henrique Ribeiro Firmino",inicio:"08/07/2026",prazo:"15/07/2026",status:"Não iniciado",conclusao:""},
+{id:122,agenda:"Weekly BPP",indicador:"BPP",acao:"Interagir com SMG13 e SMG4 para entender como tratar pcts retirados p no dia seguinte entrar na roteirização no veiculo correto",responsavel:"Charles Henrique Ribeiro Firmino",inicio:"08/07/2026",prazo:"15/07/2026",status:"Não iniciado",conclusao:""}
+],
+"plano-guerra":[
+{id:1,tema:"Liderança",categoria:"People",quando:"19/03",acao:"Entrevistas para TL AM e SD",responsavel:"Ramon / Wagner",status:"Feito",am:"Feito",pm:"",sd:"",obs:"2 candidatos aprovados SUP e GR"},
+{id:2,tema:"Liderança",categoria:"People",quando:"30/03",acao:"Retorno documentação BGC",responsavel:"Ramon / Wagner",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Acompanhando com TA"},
+{id:3,tema:"Liderança",categoria:"People",quando:"28/04",acao:"Restruturação de HC por TL (sucess factor)",responsavel:"Daiane / Magno / Jones / Raphael / Leticia / Thiago",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Pendente organização entre os TLs Raphael e Magno, Jones e Sabara - Previsão inicio 01/06"},
+{id:4,tema:"Liderança",categoria:"People",quando:"20/04",acao:"Xadrez TL por Ciclo",responsavel:"Ramon / Wagner",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Definido aguardando entrada dos novos lideres"},
+{id:5,tema:"Liderança",categoria:"People",quando:"14/04",acao:"Contratação de OP3 com experiencia em KPIs",responsavel:"Ramon / Wagner",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Inicio dia 04/05"},
+{id:6,tema:"Liderança",categoria:"People",quando:"20/04",acao:"Controle de Férias",responsavel:"Ramon / Wagner",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Controle de ferias para TL e OP3"},
+{id:7,tema:"Liderança",categoria:"Operação",quando:"27/03",acao:"Suporte TL Magno em Inventario",responsavel:"Ramon / Wagner",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Inicia dia 27/03 foco em inventario"},
+{id:8,tema:"Liderança",categoria:"People",quando:"27/03",acao:"Suporte da Stefani (SMG15)",responsavel:"Ramon / Wagner",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Alinhar com Celso Suporte da Stefani durante ausencia do Ranieri"},
+{id:9,tema:"Onboarding",categoria:"People",quando:"23/03",acao:"Participar do onboarding e coletar gaps, adequar ao padrão",responsavel:"Ramon / Wagner",status:"Feito",am:"Feito",pm:"",sd:"",obs:""},
+{id:10,tema:"Onboarding",categoria:"People",quando:"24/03",acao:"Definir focal de Onboarding por ciclo",responsavel:"Ramon / Wagner",status:"Feito",am:"Feito",pm:"Feito",sd:"Feito",obs:"AM - Luciene | PM/SD - Taygla"},
+{id:11,tema:"Onboarding",categoria:"People",quando:"24/04",acao:"Entrevistas REP MELI só para SMG1",responsavel:"Ramon / Wagner",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Por processo TA Meli não há possibilidade para região de contagem fazer tratativa exclusiva por site."},
+{id:12,tema:"FAG/BPP",categoria:"Operação",quando:"17/04",acao:"Equipe fixa Mesa ajuda (Sáb, Dom e Seg)",responsavel:"Magno / Daiane",status:"Andamento",am:"Feito",pm:"Feito",sd:"Andamento",obs:"Pendente somente domingo, aguardando virada de escala - Previsão 15/08"},
+{id:13,tema:"FAG/BPP",categoria:"Operação",quando:"17/04",acao:"Definir TL responsavel por mesa ajuda",responsavel:"Ranieri / Daiane / Mateus",status:"Feito",am:"Feito",pm:"Feito",sd:"Feito",obs:"AM - Thiago / PM - Jones"},
+{id:14,tema:"FAG",categoria:"Operação",quando:"16/05",acao:"Capacitar time de liderança no material de Overview Fechamento de gaiolas",responsavel:"Daiane / Jaderson",status:"Feito",am:"Feito",pm:"Feito",sd:"Feito",obs:"Treinamento do conceito"},
+{id:15,tema:"FAG",categoria:"Operação",quando:"16/05",acao:"Capacitar TLs para acompanhar erros de poka yoke",responsavel:"Daiane / Jaderson",status:"Não iniciado",am:"Não iniciado",pm:"Não iniciado",sd:"Não iniciado",obs:""},
+{id:16,tema:"Sorting",categoria:"Operação",quando:"07/04",acao:"Envio de evolução operacional H/H",responsavel:"Thiago / Jaderson / Ranieri / Jones / Marcos / Magno / Daiane",status:"Feito",am:"Feito",pm:"Feito",sd:"Feito",obs:""},
+{id:17,tema:"Sorting",categoria:"Operação",quando:"16/05",acao:"Envio do fechamento do ciclo com informações de Backlog, OOT, FAG, TMC",responsavel:"Ranieri",status:"Feito",am:"Feito",pm:"Feito",sd:"Feito",obs:"Planilha pronta, somente treinar TLs"},
+{id:18,tema:"FAG",categoria:"Operação",quando:"20/04",acao:"Realizar pós sorting diariamente",responsavel:"Thiago / Jaderson / Ranieri / Jones / Marcos / Magno / Daiane",status:"Feito",am:"Feito",pm:"Feito",sd:"Feito",obs:"Realizado em todos os ciclos"},
+{id:19,tema:"Sorting",categoria:"Operação",quando:"20/04",acao:"Definir area para pacotes on way aguardando processamento (VOLUMOSOS)",responsavel:"Thiago / Jaderson / Ranieri / Jones / Marcos / Magno / Daiane",status:"Feito",am:"Feito",pm:"Feito",sd:"Feito",obs:"Não colocar na parte frontal da esteira de volumosos"},
+{id:20,tema:"Sorting",categoria:"Operação",quando:"02/04",acao:"Definir area para pacotes on way aguardando processamento (GM)",responsavel:"Thiago / Jaderson / Ranieri / Jones / Marcos / Magno / Daiane",status:"Feito",am:"Feito",pm:"Feito",sd:"Feito",obs:""},
+{id:21,tema:"DIT",categoria:"Operação",quando:"21/04",acao:"Garantir o processamento do backlog (insucessos/buffer) antes do volume onway Volumosos",responsavel:"Thiago / Jaderson / Ranieri / Jones / Marcos / Magno / Daiane",status:"Feito",am:"Feito",pm:"Feito",sd:"Feito",obs:"GM ok, aguardando adequação Vol."},
+{id:22,tema:"DIT",categoria:"Operação",quando:"17/04",acao:"Tratar todos pacotes PS até o fim do sorting",responsavel:"Daiane / Leticia / Jones / Magno",status:"Feito",am:"Feito",pm:"Feito",sd:"Feito",obs:"AM - Tratativa diária Paulo, diminuição em pacotes pendentes em todos os turnos."},
+{id:23,tema:"Inventario",categoria:"Operação",quando:"09/05",acao:"Restruturar FIFO mesa ajuda",responsavel:"Ranieri / Magno",status:"Atrasado",am:"Atrasado",pm:"Atrasado",sd:"Atrasado",obs:""},
+{id:24,tema:"Sorting",categoria:"Operação",quando:"16/05",acao:"Implementar espaço para recebimento de ressalvas (Tratar pacotes On time)",responsavel:"Ranieri / Thiago / Magno",status:"Andamento",am:"Andamento",pm:"Andamento",sd:"Andamento",obs:""},
+{id:25,tema:"Dev.",categoria:"Operação",quando:"17/04",acao:"Ajuste tramo de reversa (pacotes e Insumos)",responsavel:"Ranieri",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Delegar para OP3 (Diego) reunião dia 17/04"},
+{id:26,tema:"CAP",categoria:"Operação",quando:"18/04",acao:"Revisão do layout, Linha Branca, Descompressão, Insumos, Equipamentos etc.",responsavel:"Ramon / Wagner",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Visita Tec. 14/04"},
+{id:27,tema:"Sorting",categoria:"Operação",quando:"17/04",acao:"Padronização do layout para receber gaiolas duplicadas no volumoso",responsavel:"Jaderson",status:"Feito",am:"Feito",pm:"",sd:"",obs:""},
+{id:28,tema:"Capacitação",categoria:"People",quando:"27/04",acao:"Treinar time de insucessos conforme WI",responsavel:"Magno / Marcos / Ranieri",status:"Atrasado",am:"Atrasado",pm:"",sd:"",obs:"Garantir que T2 e T1 sejam treinados"},
+{id:29,tema:"Sorting",categoria:"Operação",quando:"30/04",acao:"Revisão Malha Cuttof AM e PM",responsavel:"Ramon / Wagner / Ranieri",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Aguardando agenda com time de Flow"},
+{id:30,tema:"Liderança",categoria:"People",quando:"31/05",acao:"Desenhar personograma",responsavel:"Ramon / Wagner / Daiane / Ranieri",status:"Não iniciado",am:"Não iniciado",pm:"",sd:"",obs:""},
+{id:31,tema:"Custos",categoria:"Operação",quando:"30/09",acao:"Troca do fornecedor de mão de obra patio",responsavel:"Ramon / Ranieri",status:"Cancelado",am:"Cancelado",pm:"",sd:"",obs:"Proposta polly saving 102k recebida. Barrados em questões Juridicas."},
+{id:32,tema:"Liderança",categoria:"People",quando:"20/04",acao:"Revisão de escala liderança",responsavel:"Ramon / Wagner / Ranieri",status:"Feito",am:"Feito",pm:"",sd:"",obs:""},
+{id:33,tema:"Liderança",categoria:"People",quando:"08/05",acao:"Revisão escala time operacional",responsavel:"Ramon / Wagner / Ranieri",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Proposta Nova Escala REP"},
+{id:34,tema:"Onboarding",categoria:"People",quando:"20/04",acao:"Controle de EPIs",responsavel:"Marcos",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Criar ficha de entrega de EPIs e controle sistemico de estoque"},
+{id:35,tema:"5s",categoria:"Operação",quando:"17/04",acao:"Sala de EPIs e uniformes",responsavel:"Magno",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Migrar todo o estoque para a sala do medico"},
+{id:36,tema:"5s",categoria:"Operação",quando:"22/04",acao:"Compra de identificação para area temp. (pedestal)",responsavel:"Ranieri / Daiane / Diego",status:"Atrasado",am:"Atrasado",pm:"",sd:"",obs:"Usar para identificar cargas no piso"},
+{id:37,tema:"CAP",categoria:"Operação",quando:"30/04",acao:"Antecipação de roteirização para (Start AM e PM)",responsavel:"Wagner / Ranieri",status:"Andamento",am:"Andamento",pm:"",sd:"",obs:"Recebemos a primeira negativa, segunda tentativa sendo puxada"},
+{id:38,tema:"5s",categoria:"Operação",quando:"09/05",acao:"Horario de descarte de residos/quimicos",responsavel:"Jaderson / Daiane / Leticia",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Entre 12h e 13h"},
+{id:39,tema:"Transportes",categoria:"Operação",quando:"30/05",acao:"Quantidade de carros em OTR (Share)",responsavel:"Ranieri / Denisson",status:"Andamento",am:"Andamento",pm:"",sd:"",obs:"Verificar quantidade de veiculos para ciclos AM, PM, SD e CHP"},
+{id:40,tema:"Liderança",categoria:"People",quando:"23/04",acao:"Distribuição de equipe por turno",responsavel:"Ramon / Wagner",status:"Feito",am:"Feito",pm:"",sd:"",obs:"AM 110 PM 80 SD 40 (10 mesa de ajuda)"},
+{id:41,tema:"Capacitação",categoria:"People",quando:"24/04",acao:"Treinamento de aduanas",responsavel:"Marcos / Daiane",status:"Feito",am:"Feito",pm:"",sd:"",obs:""},
+{id:42,tema:"Capacitação",categoria:"People",quando:"29/04",acao:"Benchmarkting operações _V",responsavel:"Ramon / Wagner / Daiane / Jones / Jaderson",status:"Andamento",am:"Andamento",pm:"",sd:"",obs:"Verificar com time de EO operações que rodam bem o fluxo"},
+{id:43,tema:"5s",categoria:"Operação",quando:"31/07",acao:"Espaço do SVC vs Necessidade",responsavel:"Ramon / Ranieri / Marcos",status:"Não iniciado",am:"Não iniciado",pm:"",sd:"",obs:"Movimentação de cargas vs espaço, pallets aguardando processamento"},
+{id:44,tema:"Capacitação",categoria:"People",quando:"27/04",acao:"Benchmarkting operações Plano D+1, pós sorting e inf. operacionais",responsavel:"Wagner / Daiane / Jaderson",status:"Andamento",am:"Andamento",pm:"",sd:"",obs:"Verificar com time de EO operações que rodam bem o fluxo"},
+{id:45,tema:"Engajamento",categoria:"People",quando:"29/04",acao:"Organização do vestiario externo",responsavel:"Ramon / Wagner / Daiane / Diego",status:"Andamento",am:"Andamento",pm:"",sd:"",obs:"Programar descarte dos objetos separados na ultima organização"},
+{id:46,tema:"Engajamento",categoria:"People",quando:"24/04",acao:"Compra de armarios (looker)",responsavel:"Ranieri",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Delegar para Diego OP3 comprar 260 cadeados para controle de fluxo"},
+{id:47,tema:"Liderança",categoria:"People",quando:"17/04",acao:"Solicitação de vaga TL (2)",responsavel:"Ramon / Wagner",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Email enviado, aguardando BP"},
+{id:48,tema:"CAP",categoria:"Operação",quando:"29/04",acao:"Reclust Volumosos (retornar para svcs de origem)",responsavel:"Ramon / Wagner / Ranieri / Jaderson",status:"Andamento",am:"Andamento",pm:"",sd:"",obs:"Aguardando retorno time de flow (Diego)"},
+{id:49,tema:"Engajamento",categoria:"People",quando:"29/04",acao:"Trilha de carreira Q1 para OP2 e OP3",responsavel:"Daiane / Ranieri",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Já aplicando provas"},
+{id:50,tema:"5s",categoria:"Operação",quando:"09/05",acao:"Receber as origens e identificar, separar de forma organizada (Reestruturar responsaveis)",responsavel:"Daiane / Jones / Thiago",status:"Andamento",am:"Andamento",pm:"",sd:"",obs:""},
+{id:51,tema:"CAP",categoria:"Operação",quando:"16/05",acao:"Limitar Sacas Segunda",responsavel:"Ranieri / Jaderson",status:"Cancelado",am:"Cancelado",pm:"",sd:"",obs:"Houve uma interação de flow, aguardando agenda"},
+{id:52,tema:"Liderança",categoria:"Operação",quando:"08/05",acao:"Restruturar canais de report (grupos Wpp)",responsavel:"Ramon / Wagner / Daiane / Thiago",status:"Feito",am:"Feito",pm:"",sd:"",obs:""},
+{id:53,tema:"Sorting",categoria:"Operação",quando:"30/05",acao:"Portal TV nas esteiras, acompanhar execução do serviço",responsavel:"Ranieri / Thiago",status:"Andamento",am:"Andamento",pm:"",sd:"",obs:"Controle pokayoke on time - Recolher com Leones 3 TVs em manutenção"},
+{id:54,tema:"Capacidade",categoria:"Operação",quando:"09/05",acao:"Validar necessidade de equipamentos operacionais (gaiolas, HH, Impressoras, Carrinhos etc.)",responsavel:"Mateus",status:"Feito",am:"Feito",pm:"",sd:"",obs:""},
+{id:55,tema:"Inventario",categoria:"Operação",quando:"29/04",acao:"Ajustar mesa ajuda para contenção de quimicos",responsavel:"Magno",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Verificar necessidade de bacias, chuveiro lava olhos e extintores"},
+{id:56,tema:"5s",categoria:"Operação",quando:"29/04",acao:"Solicitar ampliação de Insumos para Sábado e Domingo",responsavel:"Ranieri / Diego",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Reversas programadas aos sábados, e 1 domingo"},
+{id:57,tema:"5s",categoria:"Operação",quando:"29/04",acao:"Criar Politica dos armarios, identificação de entrega dos cadeados",responsavel:"Daiane / Raphael",status:"Feito",am:"Feito",pm:"",sd:"",obs:""},
+{id:58,tema:"Engajamento",categoria:"People",quando:"16/05",acao:"Validar necessidade de equipamentos IS",responsavel:"Ranieri / Mateus",status:"Andamento",am:"Andamento",pm:"",sd:"",obs:"6 computadores recebidos em Julho, aguardando mais HH e impressora estações"},
+{id:59,tema:"Engajamento",categoria:"People",quando:"09/05",acao:"Validar necessidade de mobilário",responsavel:"Ranieri / Mateus",status:"Feito",am:"Feito",pm:"",sd:"",obs:""},
+{id:60,tema:"Safety",categoria:"Operação",quando:"09/05",acao:"Ajustar rotina de gemba de safety",responsavel:"Ranieri / Leticia",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Ação com focal Leticia"},
+{id:61,tema:"5s",categoria:"Operação",quando:"09/05",acao:"Readequar Layout espaço Mesa de Ajuda e ventilação do local",responsavel:"Ranieri / Magno",status:"Não iniciado",am:"Não iniciado",pm:"",sd:"",obs:""},
+{id:62,tema:"Engajamento",categoria:"People",quando:"09/05",acao:"Criar grupo geral do SVC para comunicações",responsavel:"Ramon",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Grupo criado por Ramon com inclusão dos time de REP pela liderança"},
+{id:63,tema:"Liderança",categoria:"Operação",quando:"09/05",acao:"Retornar com TIER 1 + Weekly",responsavel:"Daiane",status:"Feito",am:"Feito",pm:"",sd:"",obs:"Reiniciado em 12/05 com weekly, em 13/05 daily realizada"},
+{id:64,tema:"Liderança",categoria:"Operação",quando:"30/05",acao:"Fazer divisão de focais de indicadores",responsavel:"Daiane / Ranieri",status:"Feito",am:"Feito",pm:"",sd:"",obs:""},
+{id:65,tema:"Liderança",categoria:"People",quando:"05/07",acao:"Capacitar o time para construção de feedback do performance shipping",responsavel:"Daiane",status:"Não iniciado",am:"Não iniciado",pm:"",sd:"",obs:"Performance Shipping"},
+{id:66,tema:"Estrutura",categoria:"Operação",quando:"30/06",acao:"Estudar alteração do local de recebimento de insucesso",responsavel:"Daiane / Magno",status:"Não iniciado",am:"Não iniciado",pm:"",sd:"",obs:""},
+{id:67,tema:"Transportes",categoria:"Operação",quando:"30/05",acao:"Momento com time de OTR para conhecer as demandas e principais indicadores de transportes",responsavel:"Ranieri / Daiane",status:"Andamento",am:"Andamento",pm:"",sd:"",obs:"Primeiro momento em 19/05"}
+],
+"compras":[
+{id:1,item:"Bastão Garret Validação de reversa de insumos",status:"Pendente",responsavel:"",obs:""},
+{id:2,item:"Comprar Armários Vestiario",status:"Pendente",responsavel:"",obs:""},
+{id:3,item:"Grama Sala de descompressão",status:"Pendente",responsavel:"",obs:""},
+{id:4,item:"Identificação para area temp. (pedestal)",status:"Pendente",responsavel:"Diego",obs:"Usar para identificar cargas no piso"},
+{id:5,item:"Gradil para docas",status:"Pendente",responsavel:"",obs:""},
+{id:6,item:"Impressoras novas ou peças para manutenção das atuais (falhas diárias)",status:"Pendente",responsavel:"",obs:""},
+{id:7,item:"Porta-sacas",status:"Pendente",responsavel:"",obs:""},
+{id:8,item:"Rádios comunicadores",status:"Pendente",responsavel:"",obs:""}
+],
+"report":[],
+"papeis":[
+{id:1,tema:"Estratégico",escopo:"Preenchimento de justificativas reuniões (Weekly diretor, weekly regional, hypercare)",layer:"TL",tl:"Ranieri > Daiana",opl3:"",sup:"Ramon",agendas:"Por demanda"},
+{id:2,tema:"Estratégico",escopo:"Planejamento D-1",layer:"TL",tl:"Ranieri > Daiana",opl3:"Ericlis",sup:"Ramon",agendas:"Diário"},
+{id:3,tema:"Estratégico",escopo:"Planejamento W+1 e cadastro de capacidade",layer:"TL",tl:"Ranieri > Daiana",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:4,tema:"Estratégico",escopo:"Planejamento M+1 e solicitação de vagas (S&OP)",layer:"TL",tl:"Ranieri > Daiana",opl3:"Ramon",sup:"Ramon",agendas:"Mensal"},
+{id:5,tema:"Estratégico",escopo:"Solicitação de pleito de CPT ou TT e alavanca de capacidades",layer:"TL",tl:"Ranieri > Daiana",opl3:"Ramon",sup:"Ramon",agendas:"Por demanda"},
+{id:6,tema:"Estratégico",escopo:"Acompanhamento e atuação na produtividade",layer:"TL",tl:"Ranieri > Daiana",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:7,tema:"Custo",escopo:"Acompanhamento do CPS",layer:"TL",tl:"Ranieri > Daiana",opl3:"Ramon",sup:"Ramon",agendas:"Quinzenal"},
+{id:8,tema:"Custo",escopo:"Projetos de retenção",layer:"TL",tl:"Ranieri > Daiana",opl3:"Ramon",sup:"Ramon",agendas:"Por demanda"},
+{id:9,tema:"Custo",escopo:"Compras, lançamentos e aprovações",layer:"TL",tl:"Ranieri > Daiana",opl3:"Diego",sup:"Ramon",agendas:"Diário"},
+{id:10,tema:"Custo",escopo:"Gestão de insumos com visibilidade e acompanhamento",layer:"TL",tl:"Ranieri > Daiana",opl3:"Diego",sup:"Ramon",agendas:"Semanal"},
+{id:11,tema:"PEL",escopo:"Acompanhamento e informativo para TLs e Supervisão",layer:"TL",tl:"Ranieri > Daiana",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:12,tema:"PEL",escopo:"Curva de captura",layer:"TL",tl:"Jaderson",opl3:"Ramon",sup:"Ramon",agendas:"Por demanda"},
+{id:13,tema:"PEL",escopo:"Acompanhamento de ações MOKI",layer:"TL",tl:"Jaderson",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:14,tema:"PEL",escopo:"Interação com time de Excelência Operacional e áreas afins",layer:"TL",tl:"Ranieri > Daiana",opl3:"Ramon",sup:"Ramon",agendas:"Por demanda"},
+{id:15,tema:"PEL",escopo:"Preparo e acompanhamento das auditorias",layer:"TL",tl:"Jaderson",opl3:"Ramon",sup:"Ramon",agendas:"Trimestral"},
+{id:16,tema:"PEL",escopo:"Lembrete e acompanhamento de rotinas obrigatórias",layer:"TL",tl:"Jaderson",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:17,tema:"PEL",escopo:"Acompanhamento e auxílio na condução de ASPs",layer:"TL",tl:"Jaderson",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:18,tema:"PEL",escopo:"Solicitação de pleito se necessário",layer:"TL",tl:"Jaderson",opl3:"Ramon",sup:"Ramon",agendas:"Por demanda"},
+{id:19,tema:"Loss",escopo:"Reuniões de Loss (semanal site e quinzenal regional)",layer:"TL",tl:"Magno",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:20,tema:"Loss",escopo:"Acompanhamento e tratativa de investigações",layer:"TL",tl:"Magno",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:21,tema:"Loss",escopo:"Tratativa junto a OTR",layer:"TL",tl:"Magno",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:22,tema:"Loss",escopo:"Tratativa de filas no Logistics",layer:"TL",tl:"Magno",opl3:"Ramon",sup:"Ramon",agendas:"Diário"},
+{id:23,tema:"Loss",escopo:"Devoluções origem",layer:"TL",tl:"Magno",opl3:"Ramon",sup:"Ramon",agendas:"Diário"},
+{id:24,tema:"Loss",escopo:"Check list de inventário",layer:"TL",tl:"Magno",opl3:"Ramon",sup:"Ramon",agendas:"Diário"},
+{id:25,tema:"IS",escopo:"Acompanhamento com IS local / Necessidades",layer:"TL",tl:"Mateus",opl3:"Ramon",sup:"Ramon",agendas:"Quinzenal"},
+{id:26,tema:"IS",escopo:"Inventário equipamento",layer:"TL",tl:"Mateus",opl3:"Ramon",sup:"Ramon",agendas:"Quinzenal"},
+{id:27,tema:"Manutenção",escopo:"Entendimento da execução dos chamados (OS)",layer:"TL",tl:"Mateus",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:28,tema:"Manutenção",escopo:"Follow up em reuniões de rotina com o time",layer:"TL",tl:"Mateus",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:29,tema:"Manutenção",escopo:"Agendamento / Acompanhamento de Preventivas / Melhorias",layer:"TL",tl:"Mateus",opl3:"Ramon",sup:"Ramon",agendas:"Por demanda"},
+{id:30,tema:"Condomínio",escopo:"Interação com a gerência do condomínio",layer:"TL",tl:"Ranieri > Daiana",opl3:"Ramon",sup:"Ramon",agendas:"Quinzenal"},
+{id:31,tema:"Condomínio",escopo:"Aprovações, liberações",layer:"TL",tl:"Ranieri > Daiana",opl3:"Ramon",sup:"Ramon",agendas:"Diário"},
+{id:32,tema:"People",escopo:"Acompanhamento de ABS",layer:"TL",tl:"Raphael",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:33,tema:"People",escopo:"Check e Annual Survey - interpretação de resultados e follow das ações",layer:"TL",tl:"Raphael",opl3:"Ramon",sup:"Ramon",agendas:"Semestral (follow quinzenal)"},
+{id:34,tema:"People",escopo:"Preenchimento weekly e resumo",layer:"TL",tl:"Raphael",opl3:"Ramon",sup:"Ramon",agendas:"Quinzenal"},
+{id:35,tema:"People",escopo:"Controle de banco de horas / Legal semanalmente",layer:"TL",tl:"Raphael",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:36,tema:"People",escopo:"Acompanhamento de TO local, com aberturas",layer:"TL",tl:"Raphael",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:37,tema:"People",escopo:"Semanal com TA - Contratações e acompanhamento",layer:"TL",tl:"Raphael",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:38,tema:"People",escopo:"Follow up com fretado",layer:"TL",tl:"Raphael",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:39,tema:"People",escopo:"Follow up com refeitório",layer:"TL",tl:"Raphael",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:40,tema:"People",escopo:"Café com o gestor",layer:"TL",tl:"N/A",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:41,tema:"People",escopo:"Organização de eventos (superbriefing, eventos BF)",layer:"TL",tl:"Ranieri > Daiana",opl3:"Ramon",sup:"Ramon",agendas:"Trimestral"},
+{id:42,tema:"Safety",escopo:"Acompanhamento de indicadores (Site 360, Tratativas, Obs Comportamental)",layer:"TL",tl:"Leticia",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:43,tema:"Safety",escopo:"Preencher painel COSEG",layer:"TL",tl:"Leticia",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:44,tema:"Safety",escopo:"Acompanhar ações do COSEG / SIGA",layer:"TL",tl:"Leticia",opl3:"Ramon",sup:"Ramon",agendas:"Mensal"},
+{id:45,tema:"Safety",escopo:"Check list MOKI - Pátio Seguro e Gestão de Quimicos",layer:"TL",tl:"Leticia",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:46,tema:"Safety",escopo:"Desdobrar ações e acompanhar para IMPACTO SHE",layer:"TL",tl:"Leticia",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:47,tema:"Treinamentos",escopo:"Onboarding + Boas vindas",layer:"TL",tl:"Daiana",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:48,tema:"Treinamentos",escopo:"Acompanhar aderência - Learning hub",layer:"TL",tl:"Marcos",opl3:"Ana Medeiros",sup:"Ramon",agendas:"Semanal"},
+{id:49,tema:"Treinamentos",escopo:"Acompanhar aderência - Treinamento SHE",layer:"TL",tl:"Marcos",opl3:"Ana Medeiros",sup:"Ramon",agendas:"Semanal"},
+{id:50,tema:"Treinamentos",escopo:"Suporte ao Training Champions",layer:"TL",tl:"Marcos",opl3:"Ana Medeiros",sup:"Ramon",agendas:"Por demanda"},
+{id:51,tema:"Treinamentos",escopo:"Entender da operação quais treinamentos devemos aplicar e ou fazer reciclagem",layer:"TL",tl:"Marcos",opl3:"Ana Medeiros",sup:"Ramon",agendas:"Por demanda"},
+{id:52,tema:"5S",escopo:"Criar plano de gestão de 5S da unidade",layer:"TL",tl:"Thiago",opl3:"Danilo",sup:"Ramon",agendas:"Semanal"},
+{id:53,tema:"5S",escopo:"Criação de plano de reconhecimento atrelado a 5S na unidade",layer:"TL",tl:"Thiago",opl3:"Danilo",sup:"Ramon",agendas:"Semanal"},
+{id:54,tema:"5S",escopo:"Inventário de insumos (manga pallets)",layer:"TL",tl:"Thiago",opl3:"Danilo",sup:"Ramon",agendas:"Diário"},
+{id:55,tema:"5S",escopo:"Acompanhamento e aderência ao tramo de reversa",layer:"TL",tl:"Thiago",opl3:"Danilo",sup:"Ramon",agendas:"Diário"},
+{id:56,tema:"5S",escopo:"Dar visibilidade ao farol de troca de turno",layer:"TL",tl:"Thiago",opl3:"Danilo",sup:"Ramon",agendas:"Semanal"},
+{id:57,tema:"Routing",escopo:"Fazer follow up de ações",layer:"TL",tl:"Ranieri",opl3:"Ericlis",sup:"Ramon",agendas:"Semanal"},
+{id:58,tema:"Routing",escopo:"Ter controle e exemplos de IDs para calibração de rota",layer:"TL",tl:"Ranieri",opl3:"Ericlis",sup:"Ramon",agendas:"Semanal"},
+{id:59,tema:"Routing",escopo:"Implementar rotina de visibilidade dos indicadores (retirados, prefixo incorreto)",layer:"TL",tl:"Ranieri",opl3:"Ericlis",sup:"Ramon",agendas:"Semanal"},
+{id:60,tema:"LM",escopo:"Follow up de iniciativas de melhoria OUTR",layer:"TL",tl:"Charles",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:61,tema:"LM",escopo:"Alavancas de SPR",layer:"TL",tl:"Charles",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:62,tema:"LM",escopo:"Acompanhamento plano de ação de DS",layer:"TL",tl:"Denisson",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:63,tema:"LM",escopo:"Acompanhamento ações delay causa LM",layer:"TL",tl:"Denisson",opl3:"Ramon",sup:"Ramon",agendas:"Semanal"},
+{id:64,tema:"KPIs",escopo:"FAG",layer:"TL",tl:"Ferrari > Jones",opl3:"Carlos Eduardo",sup:"Ramon",agendas:"Diário"},
+{id:65,tema:"KPIs",escopo:"OOT 3.0",layer:"TL",tl:"Raphael > Jaderson",opl3:"Danilo",sup:"Ramon",agendas:"Diário"},
+{id:66,tema:"KPIs",escopo:"TMC",layer:"TL",tl:"Raphael > Jaderson",opl3:"Danilo",sup:"Ramon",agendas:"Diário"},
+{id:67,tema:"KPIs",escopo:"DIT",layer:"TL",tl:"Ana Medeiros",opl3:"Ramon",sup:"Ramon",agendas:"Diário"},
+{id:68,tema:"KPIs",escopo:"Sacas",layer:"TL",tl:"Mateus > Leticia",opl3:"Ana Medeiros",sup:"Ramon",agendas:"Diário"},
+{id:69,tema:"KPIs",escopo:"FOS",layer:"TL",tl:"Thiago > Marcos",opl3:"Ramon",sup:"Ramon",agendas:"Diário"},
+{id:70,tema:"KPIs",escopo:"LMS / CIA / COA",layer:"TL",tl:"Thiago > Marcos",opl3:"Carlos Eduardo > Danilo",sup:"Ramon",agendas:"Diário"}
+]
+};
+
+// ===================== STATE =====================
+let state={
+  activeTab:'plano-acao',
+  data:{...INITIAL_DATA},
+  filters:{search:'',status:'',agenda:'',indicador:'',categoria:''},
+  sort:{col:'',dir:'asc'},
+  page:1,
+  perPage:25,
+  gh:{owner:localStorage.getItem('gh_owner')||'',repo:localStorage.getItem('gh_repo')||'',token:localStorage.getItem('gh_token')||''},
+  fileSha:null,
+  editingId:null
+};
+
+// ===================== GITHUB API =====================
+async function loadFromGitHub(){
+  if(!state.gh.owner||!state.gh.repo||!state.gh.token)return;
+  try{
+    const r=await fetch(`https://api.github.com/repos/${state.gh.owner}/${state.gh.repo}/contents/data.json`,{headers:{Authorization:`Bearer ${state.gh.token}`}});
+    if(!r.ok)return;
+    const j=await r.json();
+    state.fileSha=j.sha;
+    const decoded=JSON.parse(atob(j.content.replace(/\n/g,'')));
+    // merge: use github data if non-empty, else initial
+    for(const k of Object.keys(INITIAL_DATA)){
+      if(decoded[k]&&decoded[k].length>0)state.data[k]=decoded[k];
+    }
+    renderAll();
+    showToast('Dados carregados do GitHub','success');
+  }catch(e){showToast('Erro ao carregar do GitHub: '+e.message,'error');}
+}
+
+async function saveToGitHub(){
+  if(!state.gh.owner||!state.gh.repo||!state.gh.token){showToast('Configure o repositório primeiro (⚙️ Config)','error');return false;}
+  try{
+    const body={message:'Atualiza data.json',content:btoa(unescape(encodeURIComponent(JSON.stringify(state.data,null,2))))};
+    if(state.fileSha)body.sha=state.fileSha;
+    const r=await fetch(`https://api.github.com/repos/${state.gh.owner}/${state.gh.repo}/contents/data.json`,{method:'PUT',headers:{Authorization:`Bearer ${state.gh.token}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!r.ok){const e=await r.json();throw new Error(e.message);}
+    const j=await r.json();
+    state.fileSha=j.content.sha;
+    showToast('Salvo no GitHub!','success');
+    return true;
+  }catch(e){showToast('Erro ao salvar: '+e.message,'error');return false;}
+}
+
+// ===================== STATUS BADGE =====================
+function badge(status){
+  if(!status)return'';
+  const map={'Feito':'feito','Cancelado':'cancelado','Atrasado':'atrasado','Em andamento':'andamento','Não iniciado':'nao-iniciado','Andamento':'andamento','Pendente':'pendente','Comprado':'comprado'};
+  const cls=map[status]||'nao-iniciado';
+  return`<span class="badge-${cls}">${status}</span>`;
+}
+
+function catBadge(cat){
+  if(!cat)return'';
+  const cls=cat.toLowerCase()==='people'?'people':'operacao';
+  return`<span class="cat-badge ${cls}">${cat}</span>`;
+}
+
+// ===================== STATS =====================
+function renderStats(tab,rows){
+  const el=document.getElementById('stats-row');
+  if(tab==='report'||tab==='papeis'){el.innerHTML='';return;}
+  if(tab==='compras'){
+    const total=rows.length,comprado=rows.filter(r=>r.status==='Comprado').length,pendente=rows.filter(r=>r.status==='Pendente').length;
+    el.innerHTML=`<div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">Total</div></div><div class="stat-card success"><div class="stat-value">${comprado}</div><div class="stat-label">Comprado</div></div><div class="stat-card pending"><div class="stat-value">${pendente}</div><div class="stat-label">Pendente</div></div>`;
+    return;
+  }
+  const total=rows.length,feito=rows.filter(r=>r.status==='Feito').length,atrasado=rows.filter(r=>r.status==='Atrasado').length,andamento=rows.filter(r=>r.status==='Em andamento'||r.status==='Andamento').length,nao=rows.filter(r=>r.status==='Não iniciado').length,cancelado=rows.filter(r=>r.status==='Cancelado').length;
+  el.innerHTML=`<div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">Total</div></div><div class="stat-card success"><div class="stat-value">${feito}</div><div class="stat-label">Feito</div></div><div class="stat-card danger"><div class="stat-value">${atrasado}</div><div class="stat-label">Atrasado</div></div><div class="stat-card warning"><div class="stat-value">${andamento}</div><div class="stat-label">Em andamento</div></div><div class="stat-card neutral"><div class="stat-value">${nao}</div><div class="stat-label">Não iniciado</div></div><div class="stat-card cancel"><div class="stat-value">${cancelado}</div><div class="stat-label">Cancelado</div></div>`;
+}
+
+// ===================== TOOLBAR =====================
+function renderToolbar(tab){
+  const tb=document.getElementById('toolbar');
+  const s=state.filters;
+  if(tab==='report'){tb.innerHTML='';return;}
+  const statusOptions=['','Feito','Atrasado','Em andamento','Não iniciado','Cancelado'];
+  let html=`<input class="search-input" placeholder="🔍 Buscar..." value="${s.search||''}" oninput="state.filters.search=this.value;state.page=1;renderAll()">`;
+  if(tab==='plano-acao'){
+    html+=`<select onchange="state.filters.status=this.value;state.page=1;renderAll()"><option value="">Status</option>${statusOptions.slice(1).map(o=>`<option ${s.status===o?'selected':''}>${o}</option>`).join('')}</select>`;
+    html+=`<select onchange="state.filters.agenda=this.value;state.page=1;renderAll()"><option value="">Agenda</option>${[...new Set(state.data['plano-acao'].map(r=>r.agenda))].map(o=>`<option ${s.agenda===o?'selected':''}>${o}</option>`).join('')}</select>`;
+    html+=`<select onchange="state.filters.indicador=this.value;state.page=1;renderAll()"><option value="">Indicador</option>${[...new Set(state.data['plano-acao'].map(r=>r.indicador).filter(Boolean))].sort().map(o=>`<option ${s.indicador===o?'selected':''}>${o}</option>`).join('')}</select>`;
+  }
+  if(tab==='plano-guerra'){
+    html+=`<select onchange="state.filters.status=this.value;state.page=1;renderAll()"><option value="">Status</option>${['Feito','Atrasado','Andamento','Não iniciado','Cancelado'].map(o=>`<option ${s.status===o?'selected':''}>${o}</option>`).join('')}</select>`;
+    html+=`<select onchange="state.filters.categoria=this.value;state.page=1;renderAll()"><option value="">Categoria</option><option ${s.categoria==='People'?'selected':''}>People</option><option ${s.categoria==='Operação'?'selected':''}>Operação</option></select>`;
+  }
+  if(tab==='compras'){
+    html+=`<select onchange="state.filters.status=this.value;state.page=1;renderAll()"><option value="">Status</option><option>Pendente</option><option>Comprado</option></select>`;
+  }
+  html+=`<button class="btn-outline" onclick="exportCSV()">↓ CSV</button>`;
+  tb.innerHTML=html;
+}
+
+// ===================== TABLE RENDERERS =====================
+function colHeader(label,col){
+  const active=state.sort.col===col;
+  const dir=active?state.sort.dir:'asc';
+  return`<th onclick="sortBy('${col}')" style="cursor:pointer">${label} ${active?(dir==='asc'?'▲':'▼'):'⇅'}</th>`;
+}
+
+function sortBy(col){
+  if(state.sort.col===col)state.sort.dir=state.sort.dir==='asc'?'desc':'asc';
+  else{state.sort.col=col;state.sort.dir='asc';}
+  renderAll();
+}
+
+function applySort(rows,col,dir){
+  if(!col)return rows;
+  return [...rows].sort((a,b)=>{
+    const av=a[col]||'',bv=b[col]||'';
+    return dir==='asc'?av.localeCompare(bv,undefined,{numeric:true}):bv.localeCompare(av,undefined,{numeric:true});
+  });
+}
+
+function applyFilters(tab){
+  let rows=[...state.data[tab]];
+  const f=state.filters;
+  if(f.search){const q=f.search.toLowerCase();rows=rows.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(q)));}
+  if(f.status)rows=rows.filter(r=>r.status===f.status);
+  if(f.agenda)rows=rows.filter(r=>r.agenda===f.agenda);
+  if(f.indicador)rows=rows.filter(r=>r.indicador===f.indicador);
+  if(f.categoria)rows=rows.filter(r=>r.categoria===f.categoria);
+  return applySort(rows,state.sort.col,state.sort.dir);
+}
+
+function paginate(rows){
+  const total=rows.length,pages=Math.max(1,Math.ceil(total/state.perPage));
+  state.page=Math.min(state.page,pages);
+  return{rows:rows.slice((state.page-1)*state.perPage,state.page*state.perPage),total,pages};
+}
+
+function paginationHtml(total,pages){
+  if(pages<=1)return`<div class="pagination"><span>${total} registro(s)</span></div>`;
+  const p=state.page;
+  let btns='';
+  btns+=`<button ${p===1?'disabled':''} onclick="state.page=${p-1};renderAll()">‹</button>`;
+  for(let i=1;i<=pages;i++){
+    if(i===1||i===pages||Math.abs(i-p)<=1)btns+=`<button class="${i===p?'active':''}" onclick="state.page=${i};renderAll()">${i}</button>`;
+    else if(Math.abs(i-p)===2)btns+='<span>…</span>';
+  }
+  btns+=`<button ${p===pages?'disabled':''} onclick="state.page=${p+1};renderAll()">›</button>`;
+  return`<div class="pagination"><span>${total} registro(s)</span><div>${btns}</div></div>`;
+}
+
+function renderPlanoAcao(){
+  const rows=applyFilters('plano-acao');
+  const {rows:page,total,pages}=paginate(rows);
+  let html=`<table><thead><tr>${colHeader('Agenda','agenda')}${colHeader('Indicador','indicador')}${colHeader('Ação','acao')}${colHeader('Responsável','responsavel')}${colHeader('Início','inicio')}${colHeader('Prazo','prazo')}${colHeader('Status','status')}<th>Conclusão</th><th>⚡</th></tr></thead><tbody>`;
+  for(const r of page){
+    html+=`<tr><td>${r.agenda||''}</td><td>${r.indicador||''}</td><td class="col-acao">${r.acao||''}</td><td>${r.responsavel||''}</td><td>${r.inicio||''}</td><td>${r.prazo||''}</td><td>${badge(r.status)}</td><td class="col-acao">${r.conclusao||''}</td><td class="actions-cell"><button class="btn-icon" onclick="openEdit('plano-acao',${r.id})" title="Editar">✏️</button><button class="btn-icon danger" onclick="confirmDelete('plano-acao',${r.id})" title="Excluir">🗑️</button></td></tr>`;
+  }
+  html+=`</tbody></table>${paginationHtml(total,pages)}`;
+  document.getElementById('table-wrapper').innerHTML=html;
+}
+
+function renderPlanoGuerra(){
+  const rows=applyFilters('plano-guerra');
+  const {rows:page,total,pages}=paginate(rows);
+  let html=`<table><thead><tr>${colHeader('Tema','tema')}${colHeader('Categoria','categoria')}${colHeader('Quando','quando')}${colHeader('Ação','acao')}${colHeader('Responsável','responsavel')}${colHeader('Status Geral','status')}<th>AM</th><th>PM</th><th>SD</th><th>Obs</th><th>⚡</th></tr></thead><tbody>`;
+  for(const r of page){
+    html+=`<tr><td>${r.tema||''}</td><td>${catBadge(r.categoria)}</td><td>${r.quando||''}</td><td class="col-acao">${r.acao||''}</td><td>${r.responsavel||''}</td><td>${badge(r.status)}</td><td>${badge(r.am)}</td><td>${badge(r.pm)}</td><td>${badge(r.sd)}</td><td class="col-acao">${r.obs||''}</td><td class="actions-cell"><button class="btn-icon" onclick="openEdit('plano-guerra',${r.id})" title="Editar">✏️</button><button class="btn-icon danger" onclick="confirmDelete('plano-guerra',${r.id})" title="Excluir">🗑️</button></td></tr>`;
+  }
+  html+=`</tbody></table>${paginationHtml(total,pages)}`;
+  document.getElementById('table-wrapper').innerHTML=html;
+}
+
+function renderCompras(){
+  const rows=applyFilters('compras');
+  const {rows:page,total,pages}=paginate(rows);
+  let html=`<table><thead><tr>${colHeader('Item','item')}${colHeader('Status','status')}${colHeader('Responsável','responsavel')}<th>Obs</th><th>⚡</th></tr></thead><tbody>`;
+  for(const r of page){
+    html+=`<tr><td class="col-acao">${r.item||''}</td><td>${badge(r.status)}</td><td>${r.responsavel||''}</td><td class="col-acao">${r.obs||''}</td><td class="actions-cell"><button class="btn-icon" onclick="openEdit('compras',${r.id})" title="Editar">✏️</button><button class="btn-icon danger" onclick="confirmDelete('compras',${r.id})" title="Excluir">🗑️</button></td></tr>`;
+  }
+  html+=`</tbody></table>${paginationHtml(total,pages)}`;
+  document.getElementById('table-wrapper').innerHTML=html;
+}
+
+function renderReport(){
+  document.getElementById('table-wrapper').innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:60px 20px;text-align:center"><div style="font-size:64px">📊</div><h2 style="font-size:22px;font-weight:700;color:var(--fg)">Report — Visualização de Gráficos</h2><p style="color:var(--fg-muted);max-width:420px">Esta aba contém dashboards e gráficos gerados automaticamente no Google Sheets. Acesse diretamente na planilha original para visualizá-los.</p><a href="https://docs.google.com/spreadsheets/d/1s-27Jj6sCx9AUNhEoSKC5ZvZANXChVuX25EPJsMWpNk/edit#gid=1073856096" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--accent);color:#fff;border-radius:8px;text-decoration:none;font-weight:600">📈 Abrir Report no Google Sheets</a></div>`;
+}
+
+function renderPapeis(){
+  const rows=applyFilters('papeis');
+  const {rows:page,total,pages}=paginate(rows);
+  let html=`<table><thead><tr>${colHeader('Tema','tema')}${colHeader('Escopo','escopo')}${colHeader('Layer','layer')}${colHeader('TL','tl')}${colHeader('OPL3','opl3')}${colHeader('SUP','sup')}${colHeader('Agendas','agendas')}<th>⚡</th></tr></thead><tbody>`;
+  for(const r of page){
+    html+=`<tr><td><strong>${r.tema||''}</strong></td><td class="col-acao">${r.escopo||''}</td><td>${r.layer||''}</td><td>${r.tl||''}</td><td>${r.opl3||''}</td><td>${r.sup||''}</td><td>${r.agendas||''}</td><td class="actions-cell"><button class="btn-icon" onclick="openEdit('papeis',${r.id})" title="Editar">✏️</button><button class="btn-icon danger" onclick="confirmDelete('papeis',${r.id})" title="Excluir">🗑️</button></td></tr>`;
+  }
+  html+=`</tbody></table>${paginationHtml(total,pages)}`;
+  document.getElementById('table-wrapper').innerHTML=html;
+}
+
+// ===================== RENDER ALL =====================
+function renderAll(){
+  // tabs
+  document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.toggle('active',b.dataset.tab===state.activeTab);});
+  // new button
+  const nb=document.getElementById('btn-new');
+  nb.style.display=state.activeTab==='report'?'none':'';
+  // toolbar
+  renderToolbar(state.activeTab);
+  // stats
+  renderStats(state.activeTab,state.data[state.activeTab]);
+  // table
+  if(state.activeTab==='plano-acao')renderPlanoAcao();
+  else if(state.activeTab==='plano-guerra')renderPlanoGuerra();
+  else if(state.activeTab==='compras')renderCompras();
+  else if(state.activeTab==='report')renderReport();
+  else if(state.activeTab==='papeis')renderPapeis();
+}
+
+// ===================== FORMS =====================
+function formFieldsFor(tab,row){
+  const v=n=>(row&&row[n]!=null?row[n]:'');
+  const statusOpts=(opts)=>opts.map(o=>`<option ${v('status')===o?'selected':''}>${o}</option>`).join('');
+  if(tab==='plano-acao'){
+    const agendas=['Daily','Weekly','Weekly BPP','COSEG'];
+    const statusList=['Feito','Em andamento','Não iniciado','Atrasado','Cancelado'];
+    return`
+<div class="form-group"><label>Agenda</label><select name="agenda">${agendas.map(a=>`<option ${v('agenda')===a?'selected':''}>${a}</option>`).join('')}</select></div>
+<div class="form-group"><label>Indicador</label><input name="indicador" value="${v('indicador')}"></div>
+<div class="form-group"><label>Ação *</label><textarea name="acao" rows="3" required>${v('acao')}</textarea></div>
+<div class="form-group"><label>Responsável *</label><input name="responsavel" value="${v('responsavel')}" required></div>
+<div class="form-row"><div class="form-group"><label>Início</label><input name="inicio" value="${v('inicio')}" placeholder="DD/MM/AAAA"></div><div class="form-group"><label>Prazo</label><input name="prazo" value="${v('prazo')}" placeholder="DD/MM/AAAA"></div></div>
+<div class="form-group"><label>Status</label><select name="status">${statusOpts(statusList)}</select></div>
+<div class="form-group"><label>Conclusão</label><textarea name="conclusao" rows="2">${v('conclusao')}</textarea></div>`;
+  }
+  if(tab==='plano-guerra'){
+    const statusList=['Feito','Andamento','Não iniciado','Atrasado','Cancelado'];
+    return`
+<div class="form-row"><div class="form-group"><label>Tema *</label><input name="tema" value="${v('tema')}" required></div><div class="form-group"><label>Categoria</label><select name="categoria"><option ${v('categoria')==='People'?'selected':''}>People</option><option ${v('categoria')==='Operação'?'selected':''}>Operação</option></select></div></div>
+<div class="form-row"><div class="form-group"><label>Quando</label><input name="quando" value="${v('quando')}" placeholder="DD/MM"></div><div class="form-group"><label>Responsável</label><input name="responsavel" value="${v('responsavel')}"></div></div>
+<div class="form-group"><label>Ação *</label><textarea name="acao" rows="3" required>${v('acao')}</textarea></div>
+<div class="form-group"><label>Status Geral</label><select name="status">${statusOpts(statusList)}</select></div>
+<div class="form-row"><div class="form-group"><label>AM</label><select name="am">${statusOpts(statusList)}</select></div><div class="form-group"><label>PM</label><select name="pm"><option value=""></option>${statusOpts(statusList)}</select></div><div class="form-group"><label>SD</label><select name="sd"><option value=""></option>${statusOpts(statusList)}</select></div></div>
+<div class="form-group"><label>Obs</label><textarea name="obs" rows="2">${v('obs')}</textarea></div>`;
+  }
+  if(tab==='compras'){
+    return`
+<div class="form-group"><label>Item *</label><textarea name="item" rows="2" required>${v('item')}</textarea></div>
+<div class="form-group"><label>Status</label><select name="status"><option ${v('status')==='Pendente'?'selected':''}>Pendente</option><option ${v('status')==='Comprado'?'selected':''}>Comprado</option></select></div>
+<div class="form-group"><label>Responsável</label><input name="responsavel" value="${v('responsavel')}"></div>
+<div class="form-group"><label>Obs</label><textarea name="obs" rows="2">${v('obs')}</textarea></div>`;
+  }
+  if(tab==='papeis'){
+    return`
+<div class="form-row"><div class="form-group"><label>Tema *</label><input name="tema" value="${v('tema')}" required></div><div class="form-group"><label>Layer</label><input name="layer" value="${v('layer')||'TL'}"></div></div>
+<div class="form-group"><label>Escopo *</label><textarea name="escopo" rows="2" required>${v('escopo')}</textarea></div>
+<div class="form-row"><div class="form-group"><label>TL</label><input name="tl" value="${v('tl')}"></div><div class="form-group"><label>OPL3</label><input name="opl3" value="${v('opl3')}"></div><div class="form-group"><label>SUP</label><input name="sup" value="${v('sup')}"></div></div>
+<div class="form-group"><label>Agendas</label><input name="agendas" value="${v('agendas')}" placeholder="Ex: Diário, Semanal, Por demanda"></div>`;
+  }
+  return'';
+}
+
+// ===================== MODAL LOGIC =====================
+function openNew(){
+  state.editingId=null;
+  const tab=state.activeTab;
+  document.getElementById('modal-title').textContent='Nova Ação';
+  document.getElementById('modal-form-body').innerHTML=formFieldsFor(tab,null);
+  document.getElementById('action-modal').style.display='flex';
+}
+
+function openEdit(tab,id){
+  const row=state.data[tab].find(r=>r.id===id);
+  if(!row)return;
+  state.editingId=id;
+  document.getElementById('modal-title').textContent='Editar';
+  document.getElementById('modal-form-body').innerHTML=formFieldsFor(tab,row);
+  document.getElementById('action-modal').style.display='flex';
+}
+
+function closeModal(){document.getElementById('action-modal').style.display='none';}
+
+async function saveModal(){
+  const tab=state.activeTab;
+  const form=document.getElementById('modal-form-body');
+  const data={};
+  form.querySelectorAll('[name]').forEach(el=>{data[el.name]=el.value.trim();});
+  if(state.editingId){
+    const idx=state.data[tab].findIndex(r=>r.id===state.editingId);
+    if(idx>=0)state.data[tab][idx]={...state.data[tab][idx],...data};
+  } else {
+    const maxId=state.data[tab].reduce((m,r)=>Math.max(m,r.id||0),0);
+    state.data[tab].push({id:maxId+1,...data});
+  }
+  closeModal();
+  const ok=await saveToGitHub();
+  if(ok)renderAll();
+}
+
+// ===================== DELETE =====================
+let pendingDelete=null;
+function confirmDelete(tab,id){
+  pendingDelete={tab,id};
+  document.getElementById('confirm-modal').style.display='flex';
+}
+function closeConfirm(){document.getElementById('confirm-modal').style.display='none';pendingDelete=null;}
+async function doDelete(){
+  if(!pendingDelete)return;
+  const{tab,id}=pendingDelete;
+  state.data[tab]=state.data[tab].filter(r=>r.id!==id);
+  closeConfirm();
+  const ok=await saveToGitHub();
+  if(ok)renderAll();
+}
+
+// ===================== SETTINGS MODAL =====================
+function openSettings(){
+  document.getElementById('set-owner').value=state.gh.owner;
+  document.getElementById('set-repo').value=state.gh.repo;
+  document.getElementById('set-token').value=state.gh.token;
+  document.getElementById('settings-modal').style.display='flex';
+}
+function closeSettings(){document.getElementById('settings-modal').style.display='none';}
+async function saveSettings(){
+  state.gh.owner=document.getElementById('set-owner').value.trim();
+  state.gh.repo=document.getElementById('set-repo').value.trim();
+  state.gh.token=document.getElementById('set-token').value.trim();
+  localStorage.setItem('gh_owner',state.gh.owner);
+  localStorage.setItem('gh_repo',state.gh.repo);
+  localStorage.setItem('gh_token',state.gh.token);
+  closeSettings();
+  await loadFromGitHub();
+}
+
+// ===================== EXPORT CSV =====================
+function exportCSV(){
+  const tab=state.activeTab;
+  if(tab==='report')return;
+  const rows=applyFilters(tab);
+  if(!rows.length){showToast('Nenhum dado para exportar','error');return;}
+  const keys=Object.keys(rows[0]).filter(k=>k!=='id');
+  const csv=[keys.join(','),...rows.map(r=>keys.map(k=>`"${String(r[k]||'').replace(/"/g,'""')}"`).join(','))].join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download=`${tab}-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+// ===================== TOAST =====================
+function showToast(msg,type='success'){
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;t.textContent=msg;
+  document.getElementById('toast-container').appendChild(t);
+  setTimeout(()=>t.classList.add('show'),10);
+  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},3500);
+}
+
+// ===================== INIT =====================
+document.addEventListener('DOMContentLoaded',()=>{
+  // build tabs
+  const bar=document.getElementById('tabs-bar');
+  bar.innerHTML=TABS_CONFIG.map(t=>`<button class="tab-btn${t.id===state.activeTab?' active':''}" data-tab="${t.id}" onclick="switchTab('${t.id}')">${t.label}</button>`).join('');
+  // init
+  renderAll();
+  loadFromGitHub();
+  // close modals on backdrop click
+  ['action-modal','settings-modal','confirm-modal'].forEach(id=>{
+    document.getElementById(id).addEventListener('click',e=>{if(e.target.id===id)e.currentTarget.style.display='none';});
+  });
+});
+
+function switchTab(id){
+  state.activeTab=id;
+  state.filters={search:'',status:'',agenda:'',indicador:'',categoria:''};
+  state.sort={col:'',dir:'asc'};
+  state.page=1;
+  renderAll();
+}
+</script>
+</body>
+</html>
