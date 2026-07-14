@@ -124,7 +124,7 @@ tr:hover .row-actions{opacity:1}
     <div class="modal-body" id="modal-form-body"></div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal('action-modal')">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveAction()">Salvar</button>
+      <button class="btn btn-primary" onclick="saveModal()">Salvar</button>
     </div>
   </div>
 </div>
@@ -141,13 +141,13 @@ tr:hover .row-actions{opacity:1}
       <div class="settings-section">
         <h3>Repositório</h3>
         <div class="form-grid">
-          <div class="form-group"><label>Dono (usuário ou org)</label><input id="s-owner" type="text" placeholder="Ex: mercadolivresmg1"></div>
-          <div class="form-group"><label>Nome do repositório</label><input id="s-repo" type="text" placeholder="Ex: plano-de-acao"></div>
+          <div class="form-group"><label>Dono (usuário ou org)</label><input id="set-owner" type="text" placeholder="Ex: mercadolivresmg1"></div>
+          <div class="form-group"><label>Nome do repositório</label><input id="set-repo" type="text" placeholder="Ex: plano-de-acao"></div>
         </div>
       </div>
       <div class="settings-section">
         <h3>Autenticação</h3>
-        <div class="form-group"><label>Personal Access Token (GitHub)</label><input id="s-token" type="password" placeholder="ghp_..."></div>
+        <div class="form-group"><label>Personal Access Token (GitHub)</label><input id="set-token" type="password" placeholder="ghp_..."></div>
         <p style="font-size:11px;color:#888;margin-top:6px">Gere em: GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens → Contents (read & write)</p>
       </div>
     </div>
@@ -165,7 +165,7 @@ tr:hover .row-actions{opacity:1}
     <div class="modal-body"><p style="font-size:14px">Tem certeza que deseja excluir este item? Esta operação não pode ser desfeita.</p></div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal('confirm-modal')">Cancelar</button>
-      <button class="btn btn-danger" onclick="confirmDelete()">Excluir</button>
+      <button class="btn btn-danger" onclick="doDelete()">Excluir</button>
     </div>
   </div>
 </div>
@@ -734,7 +734,7 @@ function openEdit(tab,id){
   document.getElementById('action-modal').style.display='flex';
 }
 
-function closeModal(){document.getElementById('action-modal').style.display='none';}
+function closeModal(id){document.getElementById(id||'action-modal').style.display='none';}
 
 async function saveModal(){
   const tab=state.activeTab;
@@ -748,9 +748,9 @@ async function saveModal(){
     const maxId=state.data[tab].reduce((m,r)=>Math.max(m,r.id||0),0);
     state.data[tab].push({id:maxId+1,...data});
   }
-  closeModal();
-  const ok=await saveToGitHub();
-  if(ok)renderAll();
+  closeModal('action-modal');
+  renderAll();
+  saveToGitHub();
 }
 
 // ===================== DELETE =====================
@@ -764,9 +764,10 @@ async function doDelete(){
   if(!pendingDelete)return;
   const{tab,id}=pendingDelete;
   state.data[tab]=state.data[tab].filter(r=>r.id!==id);
-  closeConfirm();
-  const ok=await saveToGitHub();
-  if(ok)renderAll();
+  closeModal('confirm-modal');
+  pendingDelete=null;
+  renderAll();
+  saveToGitHub();
 }
 
 // ===================== SETTINGS MODAL =====================
